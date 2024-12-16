@@ -26,6 +26,20 @@ export const resumeHandlers = [
     const resume = storage.createResume(req.body);
     return res(ctx.json(resume));
   }),
+
+  rest.put('/api/resumes/:id', (req, res, ctx) => {
+    const { id } = req.params;
+    const resume = storage.updateResume(Number(id), req.body);
+
+    if (!resume) {
+      return res(
+        ctx.status(404),
+        ctx.json({ message: '이력서를 찾을 수 없습니다.' })
+      );
+    }
+
+    return res(ctx.json(resume));
+  }),
 ];
 
 // Introduction handlers

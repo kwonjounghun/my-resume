@@ -26,6 +26,7 @@ import Link from 'next/link';
 import { FiArrowLeft } from 'react-icons/fi';
 import { CreateResumeRequest, Resume } from '@/entities/resume/model/types';
 import { createResume } from '@/entities/resume/api/createResume';
+import { updateResume } from '@/entities/resume/api/updateResume';
 import { getIntroductions } from '@/entities/introduction/api/getIntroductions';
 import { getRetrospectives } from '@/entities/retrospective/api/getRetrospectives';
 
@@ -88,8 +89,32 @@ export default function ResumeForm({
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<Resume> }) =>
+      updateResume(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['resumes'] });
+      toast({
+        title: '이력서가 수정되었습니다.',
+        status: 'success',
+      });
+      onSuccess?.();
+      router.push('/resumes');
+    },
+    onError: () => {
+      toast({
+        title: '이력서 수정에 실패했습니다.',
+        status: 'error',
+      });
+    },
+  });
+
   const onSubmit = (data: CreateResumeRequest) => {
-    createMutation.mutate(data);
+    if (mode === 'edit' && initialData) {
+      updateMutation.mutate({ id: initialData.id, data });
+    } else {
+      createMutation.mutate(data);
+    }
   };
 
   // 요약 내용이 있는 회고만 필터링
@@ -251,7 +276,10 @@ export default function ResumeForm({
             />
           </FormControl>
 
-          <Button type="submit" isLoading={createMutation.isPending}>
+          <Button
+            type="submit"
+            isLoading={createMutation.isPending || updateMutation.isPending}
+          >
             {mode === 'create' ? '등록하기' : '수정하기'}
           </Button>
         </Stack>
