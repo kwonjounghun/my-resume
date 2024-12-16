@@ -1,134 +1,140 @@
-import { rest } from 'msw';
+import { http } from 'msw';
 import { storage } from './storage';
 
 // Company wishlist handlers
 export const companyWishlistHandlers = [
-  rest.get('/api/company-wishlist', (req, res, ctx) => {
+  http.get('/api/company-wishlist', ({ request }) => {
     const companyWishlist = storage.getCompanyWishlist();
-    return res(ctx.json({ companyWishlist }));
+    return Response.json({ companyWishlist });
   }),
 ];
 
 // Resume handlers
 export const resumeHandlers = [
-  rest.get('/api/resumes', (req, res, ctx) => {
+  http.get('/api/resumes', ({ request }) => {
     const resumes = storage.getResumes();
-    return res(ctx.json({ resumes }));
+    return Response.json({ resumes });
   }),
 
-  rest.get('/api/resumes/:id', (req, res, ctx) => {
-    const { id } = req.params;
+  http.get('/api/resumes/:id', ({ params }) => {
+    const { id } = params;
     const resume = storage.getResume(Number(id));
 
     if (!resume) {
-      return res(
-        ctx.status(404),
-        ctx.json({ message: '이력서를 찾을 수 없습니다.' })
+      return new Response(
+        JSON.stringify({ message: '이력서를 찾을 수 없습니다.' }),
+        { status: 404 }
       );
     }
 
-    return res(ctx.json(resume));
+    return Response.json(resume);
   }),
 
-  rest.post('/api/resumes', (req, res, ctx) => {
-    const resume = storage.createResume(req.body);
-    return res(ctx.json(resume));
+  http.post('/api/resumes', async ({ request }) => {
+    const body = await request.json();
+    const resume = storage.addResume(body);
+    return Response.json(resume);
   }),
 
-  rest.put('/api/resumes/:id', (req, res, ctx) => {
-    const { id } = req.params;
-    const resume = storage.updateResume(Number(id), req.body);
+  http.put('/api/resumes/:id', async ({ params, request }) => {
+    const { id } = params;
+    const body = await request.json();
+    const resume = storage.updateResume(Number(id), body);
 
     if (!resume) {
-      return res(
-        ctx.status(404),
-        ctx.json({ message: '이력서를 찾을 수 없습니다.' })
+      return new Response(
+        JSON.stringify({ message: '이력서를 찾을 수 없습니다.' }),
+        { status: 404 }
       );
     }
 
-    return res(ctx.json(resume));
+    return Response.json(resume);
   }),
 ];
 
 // Introduction handlers
 export const introductionHandlers = [
-  rest.get('/api/introductions', (req, res, ctx) => {
+  http.get('/api/introductions', ({ request }) => {
     const introductions = storage.getIntroductions();
-    return res(ctx.json({ introductions }));
+    return Response.json({ introductions });
   }),
 
-  rest.get('/api/introductions/:id', (req, res, ctx) => {
-    const { id } = req.params;
+  http.get('/api/introductions/:id', ({ params }) => {
+    const { id } = params;
     const introduction = storage.getIntroduction(Number(id));
 
     if (!introduction) {
-      return res(
-        ctx.status(404),
-        ctx.json({ message: '자기소개서를 찾을 수 없습니다.' })
+      return new Response(
+        JSON.stringify({ message: '자기소개서를 찾을 수 없습니다.' }),
+        { status: 404 }
       );
     }
 
-    return res(ctx.json(introduction));
+    return Response.json(introduction);
   }),
 
-  rest.post('/api/introductions', (req, res, ctx) => {
-    const introduction = storage.createIntroduction(req.body);
-    return res(ctx.json(introduction));
+  http.post('/api/introductions', async ({ request }) => {
+    const body = await request.json();
+    const introduction = storage.addIntroduction(body);
+    return Response.json(introduction);
   }),
 
-  rest.put('/api/introductions/:id', (req, res, ctx) => {
-    const { id } = req.params;
-    const introduction = storage.updateIntroduction(Number(id), req.body);
-    return res(ctx.json(introduction));
+  http.put('/api/introductions/:id', async ({ params, request }) => {
+    const { id } = params;
+    const body = await request.json();
+    const introduction = storage.updateIntroduction(Number(id), body);
+    return Response.json(introduction);
   }),
 ];
 
 // Retrospective handlers
 export const retrospectiveHandlers = [
-  rest.get('/api/retrospectives', (req, res, ctx) => {
+  http.get('/api/retrospectives', ({ request }) => {
     const retrospectives = storage.getRetrospectives();
-    return res(ctx.json({ retrospectives }));
+    return Response.json({ retrospectives });
   }),
 
-  rest.get('/api/retrospectives/:id', (req, res, ctx) => {
-    const { id } = req.params;
+  http.get('/api/retrospectives/:id', ({ params }) => {
+    const { id } = params;
     const retrospective = storage.getRetrospective(Number(id));
 
     if (!retrospective) {
-      return res(
-        ctx.status(404),
-        ctx.json({ message: '회고를 찾을 수 없습니다.' })
+      return new Response(
+        JSON.stringify({ message: '회고를 찾을 수 없습니다.' }),
+        { status: 404 }
       );
     }
 
-    return res(ctx.json(retrospective));
+    return Response.json(retrospective);
   }),
 
-  rest.post('/api/retrospectives', (req, res, ctx) => {
-    const retrospective = storage.createRetrospective(req.body);
-    return res(ctx.json(retrospective));
+  http.post('/api/retrospectives', async ({ request }) => {
+    const body = await request.json();
+    const retrospective = storage.addRetrospective(body);
+    return Response.json(retrospective);
   }),
 
-  rest.put('/api/retrospectives/:id', (req, res, ctx) => {
-    const { id } = req.params;
-    const retrospective = storage.updateRetrospective(Number(id), req.body);
-    return res(ctx.json(retrospective));
+  http.put('/api/retrospectives/:id', async ({ params, request }) => {
+    const { id } = params;
+    const body = await request.json();
+    const retrospective = storage.updateRetrospective(Number(id), body);
+    return Response.json(retrospective);
   }),
 
-  rest.delete('/api/retrospectives/:id', (req, res, ctx) => {
-    const { id } = req.params;
+  http.delete('/api/retrospectives/:id', ({ params }) => {
+    const { id } = params;
     storage.deleteRetrospective(Number(id));
-    return res(ctx.json({ message: '회고가 삭제되었습니다.' }));
+    return Response.json({ message: '회고가 삭제되었습니다.' });
   }),
 
-  rest.post('/api/retrospectives/:id/summarize', (req, res, ctx) => {
-    const { id } = req.params;
+  http.post('/api/retrospectives/:id/summarize', async ({ params }) => {
+    const { id } = params;
     const retrospective = storage.getRetrospective(Number(id));
 
     if (!retrospective) {
-      return res(
-        ctx.status(404),
-        ctx.json({ message: '회고를 찾을 수 없습니다.' })
+      return new Response(
+        JSON.stringify({ message: '회고를 찾을 수 없습니다.' }),
+        { status: 404 }
       );
     }
 
@@ -141,7 +147,7 @@ export const retrospectiveHandlers = [
       summary,
     });
 
-    return res(ctx.json(updatedRetrospective));
+    return Response.json(updatedRetrospective);
   }),
 ];
 

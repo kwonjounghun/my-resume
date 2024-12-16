@@ -1,11 +1,13 @@
 import { Retrospective } from '@/entities/retrospective/model/types';
 import { Introduction } from '@/entities/introduction/model/types';
 import { Resume } from '@/entities/resume/model/types';
+import { CompanyWishlist } from '@/entities/company/model/types';
 
 const STORAGE_KEYS = {
   RETROSPECTIVES: 'retrospectives',
   INTRODUCTIONS: 'introductions',
   RESUMES: 'resumes',
+  COMPANY_WISHLIST: 'company_wishlist',
 } as const;
 
 const mockRetrospectives = [
@@ -75,6 +77,21 @@ const mockResumes = [
   },
 ];
 
+const mockCompanyWishlist = [
+  {
+    id: 1,
+    userId: 1,
+    company: '회사 A',
+    link: 'https://example.com',
+    resumeId: 1,
+    isJobApplied: false,
+    status: 'DOCUMENT_SUBMITTED',
+    description: '회사 설명',
+    createdAt: '2024-01-01T00:00:00.000Z',
+    updatedAt: '2024-01-01T00:00:00.000Z',
+  },
+];
+
 export class Storage {
   private static instance: Storage;
 
@@ -110,6 +127,13 @@ export class Storage {
       localStorage.setItem(
         STORAGE_KEYS.RESUMES,
         JSON.stringify(mockResumes)
+      );
+    }
+
+    if (!localStorage.getItem(STORAGE_KEYS.COMPANY_WISHLIST)) {
+      localStorage.setItem(
+        STORAGE_KEYS.COMPANY_WISHLIST,
+        JSON.stringify(mockCompanyWishlist)
       );
     }
   }
@@ -278,6 +302,32 @@ export class Storage {
     localStorage.setItem(STORAGE_KEYS.RESUMES, JSON.stringify(filteredResumes));
     return true;
   }
+
+  getCompanyWishlist(): CompanyWishlist[] {
+    if (typeof window === 'undefined') return [];
+
+    const data = localStorage.getItem(STORAGE_KEYS.COMPANY_WISHLIST);
+    return data ? JSON.parse(data) : [];
+  }
+
+  getRetrospective(id: number): Retrospective | null {
+    const retrospectives = this.getRetrospectives();
+    return retrospectives.find(r => r.id === id) || null;
+  }
+
+  getIntroduction(id: number): Introduction | null {
+    const introductions = this.getIntroductions();
+    return introductions.find(i => i.id === id) || null;
+  }
+
+  getResume(id: number): Resume | null {
+    const resumes = this.getResumes();
+    return resumes.find(r => r.id === id) || null;
+  }
+
+  createRetrospective = this.addRetrospective;
+  createIntroduction = this.addIntroduction;
+  createResume = this.addResume;
 }
 
 export const storage = Storage.getInstance(); 
