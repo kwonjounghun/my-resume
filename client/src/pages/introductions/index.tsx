@@ -1,9 +1,5 @@
-import { Container, Heading } from '@chakra-ui/react';
+import { IntroductionList } from '@/widgets/introduction-list';
 
 export default function IntroductionsPage() {
-  return (
-    <Container maxW="container.xl" py={8}>
-      <Heading>자기소개 목록</Heading>
-    </Container>
-  );
+  return <IntroductionList />;
 } 

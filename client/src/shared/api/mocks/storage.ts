@@ -1,7 +1,9 @@
 import { Retrospective } from '@/entities/retrospective/model/types';
+import { Introduction } from '@/entities/introduction/model/types';
 
 const STORAGE_KEYS = {
   RETROSPECTIVES: 'retrospectives',
+  INTRODUCTIONS: 'introductions',
 } as const;
 
 const mockRetrospectives = [
@@ -39,6 +41,23 @@ const mockRetrospectives = [
   },
 ];
 
+const mockIntroductions = [
+  {
+    id: 1,
+    title: '프론트엔드 개발자 자기소개',
+    content: '안녕하세요. 프론트엔드 개발자입니다.',
+    createdAt: '2024-01-01T00:00:00.000Z',
+    updatedAt: '2024-01-01T00:00:00.000Z',
+  },
+  {
+    id: 2,
+    title: '백엔드 개발자 자기소개',
+    content: '안녕하세요. 백엔드 개발자입니다.',
+    createdAt: '2024-02-01T00:00:00.000Z',
+    updatedAt: '2024-02-01T00:00:00.000Z',
+  },
+];
+
 export class Storage {
   private static instance: Storage;
 
@@ -60,6 +79,13 @@ export class Storage {
       localStorage.setItem(
         STORAGE_KEYS.RETROSPECTIVES,
         JSON.stringify(mockRetrospectives)
+      );
+    }
+
+    if (!localStorage.getItem(STORAGE_KEYS.INTRODUCTIONS)) {
+      localStorage.setItem(
+        STORAGE_KEYS.INTRODUCTIONS,
+        JSON.stringify(mockIntroductions)
       );
     }
   }
@@ -116,6 +142,61 @@ export class Storage {
     if (filteredRetrospectives.length === retrospectives.length) return false;
 
     localStorage.setItem(STORAGE_KEYS.RETROSPECTIVES, JSON.stringify(filteredRetrospectives));
+    return true;
+  }
+
+  getIntroductions(): Introduction[] {
+    if (typeof window === 'undefined') return [];
+
+    const data = localStorage.getItem(STORAGE_KEYS.INTRODUCTIONS);
+    return data ? JSON.parse(data) : [];
+  }
+
+  addIntroduction(introduction: Omit<Introduction, 'id' | 'createdAt' | 'updatedAt'>): Introduction {
+    const introductions = this.getIntroductions();
+    const newId = introductions.length > 0 ? Math.max(...introductions.map(i => i.id)) + 1 : 1;
+    
+    const now = new Date().toISOString();
+    const newIntroduction: Introduction = {
+      ...introduction,
+      id: newId,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    localStorage.setItem(
+      STORAGE_KEYS.INTRODUCTIONS,
+      JSON.stringify([...introductions, newIntroduction])
+    );
+
+    return newIntroduction;
+  }
+
+  updateIntroduction(id: number, data: Partial<Introduction>): Introduction | null {
+    const introductions = this.getIntroductions();
+    const index = introductions.findIndex(i => i.id === id);
+    
+    if (index === -1) return null;
+
+    const updatedIntroduction = {
+      ...introductions[index],
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+
+    introductions[index] = updatedIntroduction;
+    localStorage.setItem(STORAGE_KEYS.INTRODUCTIONS, JSON.stringify(introductions));
+
+    return updatedIntroduction;
+  }
+
+  deleteIntroduction(id: number): boolean {
+    const introductions = this.getIntroductions();
+    const filteredIntroductions = introductions.filter(i => i.id !== id);
+    
+    if (filteredIntroductions.length === introductions.length) return false;
+
+    localStorage.setItem(STORAGE_KEYS.INTRODUCTIONS, JSON.stringify(filteredIntroductions));
     return true;
   }
 }

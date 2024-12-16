@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { storage } from './storage';
 import { Retrospective } from '@/entities/retrospective/model/types';
+import { Introduction } from '@/entities/introduction/model/types';
 
 export const handlers = [
   http.get('/api/retrospectives', ({ request }) => {
@@ -125,5 +126,80 @@ export const handlers = [
     });
 
     return HttpResponse.json(updatedRetrospective);
+  }),
+
+  http.get('/api/introductions', ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get('page')) || 1;
+    const limit = Number(url.searchParams.get('limit')) || 10;
+    const keyword = url.searchParams.get('keyword');
+
+    let introductions = storage.getIntroductions();
+
+    // 필터 적용
+    if (keyword) {
+      introductions = introductions.filter(
+        (intro) =>
+          intro.title.includes(keyword) ||
+          intro.content.includes(keyword)
+      );
+    }
+
+    // 페이지네이션 적용
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const paginatedIntroductions = introductions.slice(start, end);
+
+    return HttpResponse.json({
+      introductions: paginatedIntroductions,
+      total: introductions.length,
+    });
+  }),
+
+  http.get('/api/introductions/:id', ({ params }) => {
+    const { id } = params;
+    const introductions = storage.getIntroductions();
+    const introduction = introductions.find((i) => i.id === Number(id));
+
+    if (!introduction) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(introduction);
+  }),
+
+  http.post('/api/introductions', async ({ request }) => {
+    const introduction = (await request.json()) as Omit<
+      Introduction,
+      'id' | 'createdAt' | 'updatedAt'
+    >;
+
+    const newIntroduction = storage.addIntroduction(introduction);
+
+    return HttpResponse.json(newIntroduction, { status: 201 });
+  }),
+
+  http.put('/api/introductions/:id', async ({ params, request }) => {
+    const { id } = params;
+    const data = (await request.json()) as Partial<Introduction>;
+
+    const updatedIntroduction = storage.updateIntroduction(Number(id), data);
+
+    if (!updatedIntroduction) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(updatedIntroduction);
+  }),
+
+  http.delete('/api/introductions/:id', ({ params }) => {
+    const { id } = params;
+    const success = storage.deleteIntroduction(Number(id));
+
+    if (!success) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
