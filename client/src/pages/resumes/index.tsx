@@ -1,9 +1,5 @@
-import { Container, Heading } from '@chakra-ui/react';
+import { ResumeList } from '@/widgets/resume-list';
 
 export default function ResumesPage() {
-  return (
-    <Container maxW="container.xl" py={8}>
-      <Heading>이력서 목록</Heading>
-    </Container>
-  );
+  return <ResumeList />;
 } 

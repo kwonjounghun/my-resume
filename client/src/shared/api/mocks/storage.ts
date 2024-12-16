@@ -1,9 +1,11 @@
 import { Retrospective } from '@/entities/retrospective/model/types';
 import { Introduction } from '@/entities/introduction/model/types';
+import { Resume } from '@/entities/resume/model/types';
 
 const STORAGE_KEYS = {
   RETROSPECTIVES: 'retrospectives',
   INTRODUCTIONS: 'introductions',
+  RESUMES: 'resumes',
 } as const;
 
 const mockRetrospectives = [
@@ -58,6 +60,21 @@ const mockIntroductions = [
   },
 ];
 
+const mockResumes = [
+  {
+    id: 1,
+    userId: 1,
+    selfIntroductionId: 1,
+    title: '프론트엔드 개발자 이력서',
+    content: '이력서 내용',
+    createdAt: '2024-01-01T00:00:00.000Z',
+    updatedAt: '2024-01-01T00:00:00.000Z',
+    isPublic: true,
+    projects: [1, 2],
+    companyWishlist: [1],
+  },
+];
+
 export class Storage {
   private static instance: Storage;
 
@@ -86,6 +103,13 @@ export class Storage {
       localStorage.setItem(
         STORAGE_KEYS.INTRODUCTIONS,
         JSON.stringify(mockIntroductions)
+      );
+    }
+
+    if (!localStorage.getItem(STORAGE_KEYS.RESUMES)) {
+      localStorage.setItem(
+        STORAGE_KEYS.RESUMES,
+        JSON.stringify(mockResumes)
       );
     }
   }
@@ -197,6 +221,61 @@ export class Storage {
     if (filteredIntroductions.length === introductions.length) return false;
 
     localStorage.setItem(STORAGE_KEYS.INTRODUCTIONS, JSON.stringify(filteredIntroductions));
+    return true;
+  }
+
+  getResumes(): Resume[] {
+    if (typeof window === 'undefined') return [];
+
+    const data = localStorage.getItem(STORAGE_KEYS.RESUMES);
+    return data ? JSON.parse(data) : [];
+  }
+
+  addResume(resume: Omit<Resume, 'id' | 'createdAt' | 'updatedAt'>): Resume {
+    const resumes = this.getResumes();
+    const newId = resumes.length > 0 ? Math.max(...resumes.map(r => r.id)) + 1 : 1;
+    
+    const now = new Date().toISOString();
+    const newResume: Resume = {
+      ...resume,
+      id: newId,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    localStorage.setItem(
+      STORAGE_KEYS.RESUMES,
+      JSON.stringify([...resumes, newResume])
+    );
+
+    return newResume;
+  }
+
+  updateResume(id: number, data: Partial<Resume>): Resume | null {
+    const resumes = this.getResumes();
+    const index = resumes.findIndex(r => r.id === id);
+    
+    if (index === -1) return null;
+
+    const updatedResume = {
+      ...resumes[index],
+      ...data,
+      updatedAt: new Date().toISOString(),
+    };
+
+    resumes[index] = updatedResume;
+    localStorage.setItem(STORAGE_KEYS.RESUMES, JSON.stringify(resumes));
+
+    return updatedResume;
+  }
+
+  deleteResume(id: number): boolean {
+    const resumes = this.getResumes();
+    const filteredResumes = resumes.filter(r => r.id !== id);
+    
+    if (filteredResumes.length === resumes.length) return false;
+
+    localStorage.setItem(STORAGE_KEYS.RESUMES, JSON.stringify(filteredResumes));
     return true;
   }
 }
