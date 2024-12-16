@@ -1,14 +1,5 @@
 import '@testing-library/jest-dom';
-import { worker } from './src/mocks/browser';
+import { TextEncoder, TextDecoder } from 'util';
 
-beforeAll(() => {
-  worker.start();
-});
-
-afterEach(() => {
-  worker.resetHandlers();
-});
-
-afterAll(() => {
-  worker.stop();
-});
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;

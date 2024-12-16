@@ -4,8 +4,9 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Geist, Geist_Mono } from 'next/font/google';
-import theme from '@/styles/theme';
-import '@/styles/globals.css';
+import Navigation from '@/widgets/navigation/ui/Navigation';
+import theme from '@/shared/lib/theme';
+import '@/shared/ui/globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -42,6 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
       `}</style>
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
+          <Navigation />
           <Component {...pageProps} />
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />
