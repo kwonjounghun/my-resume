@@ -1,6 +1,14 @@
 import { rest } from 'msw';
 import { storage } from './storage';
 
+// Company wishlist handlers
+export const companyWishlistHandlers = [
+  rest.get('/api/company-wishlist', (req, res, ctx) => {
+    const companyWishlist = storage.getCompanyWishlist();
+    return res(ctx.json({ companyWishlist }));
+  }),
+];
+
 // Resume handlers
 export const resumeHandlers = [
   rest.get('/api/resumes', (req, res, ctx) => {
@@ -141,4 +149,5 @@ export const handlers = [
   ...resumeHandlers,
   ...introductionHandlers,
   ...retrospectiveHandlers,
+  ...companyWishlistHandlers,
 ];
