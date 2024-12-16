@@ -105,4 +105,25 @@ export const handlers = [
 
     return new HttpResponse(null, { status: 204 });
   }),
+
+  http.post('/api/retrospectives/:id/summarize', async ({ params }) => {
+    const { id } = params;
+    const retrospectives = storage.getRetrospectives();
+    const retrospective = retrospectives.find((r) => r.id === Number(id));
+
+    if (!retrospective) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    // 실제로는 OpenAI API를 호출하여 요약을 생성하지만,
+    // 여기서는 간단한 요약을 생성합니다.
+    const summary = `${retrospective.situation} 상황에서 ${retrospective.task}라는 과제를 받아 ${retrospective.action}을 수행하여 ${retrospective.result}를 달성했습니다.`;
+
+    const updatedRetrospective = storage.updateRetrospective(Number(id), {
+      ...retrospective,
+      summary,
+    });
+
+    return HttpResponse.json(updatedRetrospective);
+  }),
 ];
