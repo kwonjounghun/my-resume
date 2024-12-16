@@ -1,0 +1,263 @@
+import {
+  Box,
+  Button,
+  Card,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Stack,
+  Switch,
+  Tag,
+  TagCloseButton,
+  TagLabel,
+  Text,
+  Textarea,
+  useToast,
+} from '@chakra-ui/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { CreateRetrospectiveRequest } from '@/entities/retrospective/model/types';
+import { createRetrospective } from '@/entities/retrospective/api/createRetrospective';
+import { useState } from 'react';
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+
+interface RetrospectiveFormProps {
+  onSuccess?: () => void;
+}
+
+export default function RetrospectiveForm({ onSuccess }: RetrospectiveFormProps) {
+  const router = useRouter();
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [newKeyword, setNewKeyword] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateRetrospectiveRequest>({
+    defaultValues: {
+      isPublic: true,
+      keywords: [],
+    },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createRetrospective,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['retrospectives'] });
+      toast({
+        title: '회고가 등록되었습니다.',
+        status: 'success',
+      });
+      onSuccess?.();
+      router.push('/retrospectives');
+    },
+    onError: () => {
+      toast({
+        title: '회고 등록에 실패했습니다.',
+        status: 'error',
+      });
+    },
+  });
+
+  const handleKeywordAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && newKeyword.trim()) {
+      e.preventDefault();
+      if (keywords.length >= 10) {
+        toast({
+          title: '���워드는 최대 10개까지 추가할 수 있습니다.',
+          status: 'warning',
+        });
+        return;
+      }
+      if (!keywords.includes(newKeyword.trim())) {
+        setKeywords([...keywords, newKeyword.trim()]);
+      }
+      setNewKeyword('');
+    }
+  };
+
+  const handleKeywordRemove = (keyword: string) => {
+    setKeywords(keywords.filter((k) => k !== keyword));
+  };
+
+  const onSubmit = (data: CreateRetrospectiveRequest) => {
+    mutate({
+      ...data,
+      keywords,
+    });
+  };
+
+  return (
+    <Card p={6}>
+      <Box as="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Stack spacing={6}>
+          <Box display="flex" justifyContent="flex-start">
+            <Link href="/retrospectives" passHref>
+              <Button
+                variant="ghost"
+                leftIcon={<FiArrowLeft />}
+                color="gray.600"
+                _hover={{ color: 'primary.500' }}
+              >
+                목록으로
+              </Button>
+            </Link>
+          </Box>
+          <FormControl isInvalid={!!errors.title}>
+            <FormLabel>제목</FormLabel>
+            <Input
+              {...register('title', {
+                required: '제목을 입력해주세요.',
+                maxLength: {
+                  value: 100,
+                  message: '제목은 100자 이내로 입력해주세요.',
+                },
+              })}
+              placeholder="프로젝트 제목을 입력하세요"
+            />
+            <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.company}>
+            <FormLabel>회사</FormLabel>
+            <Input
+              {...register('company', {
+                required: '회사를 입력해주세요.',
+              })}
+              placeholder="회사명을 입력하세요"
+            />
+            <FormErrorMessage>{errors.company?.message}</FormErrorMessage>
+          </FormControl>
+
+          <Stack direction="row" spacing={4}>
+            <FormControl isInvalid={!!errors.startDate}>
+              <FormLabel>시작일</FormLabel>
+              <Input
+                type="date"
+                {...register('startDate', {
+                  required: '시작일을 입력해주세요.',
+                })}
+              />
+              <FormErrorMessage>{errors.startDate?.message}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.endDate}>
+              <FormLabel>종료일</FormLabel>
+              <Input
+                type="date"
+                {...register('endDate', {
+                  required: '종료일을 입력해주세요.',
+                })}
+              />
+              <FormErrorMessage>{errors.endDate?.message}</FormErrorMessage>
+            </FormControl>
+          </Stack>
+
+          <FormControl>
+            <FormLabel>키워드</FormLabel>
+            <Input
+              value={newKeyword}
+              onChange={(e) => setNewKeyword(e.target.value)}
+              onKeyDown={handleKeywordAdd}
+              placeholder="키워드를 입력하고 Enter를 누르세요"
+            />
+            <Text fontSize="sm" color="gray.500" mt={1}>
+              최대 10개까지 추가할 수 있습니다.
+            </Text>
+            {keywords.length > 0 && (
+              <Box mt={2}>
+                <Stack direction="row" wrap="wrap" spacing={2}>
+                  {keywords.map((keyword) => (
+                    <Tag
+                      key={keyword}
+                      size="md"
+                      borderRadius="full"
+                      variant="solid"
+                      colorScheme="primary"
+                    >
+                      <TagLabel>{keyword}</TagLabel>
+                      <TagCloseButton
+                        aria-label={`${keyword} 삭제`}
+                        onClick={() => handleKeywordRemove(keyword)}
+                      />
+                    </Tag>
+                  ))}
+                </Stack>
+              </Box>
+            )}
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.situation}>
+            <FormLabel>상황 (Situation)</FormLabel>
+            <Textarea
+              {...register('situation', {
+                required: '상황을 입력해주세요.',
+              })}
+              placeholder="어떤 상황이었나요?"
+              rows={3}
+            />
+            <FormErrorMessage>{errors.situation?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.task}>
+            <FormLabel>과제 (Task)</FormLabel>
+            <Textarea
+              {...register('task', {
+                required: '과제를 입력해주세요.',
+              })}
+              placeholder="어떤 과제가 주어졌나요?"
+              rows={3}
+            />
+            <FormErrorMessage>{errors.task?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.action}>
+            <FormLabel>행동 (Action)</FormLabel>
+            <Textarea
+              {...register('action', {
+                required: '행동을 입력해주세요.',
+              })}
+              placeholder="어떤 행동을 취했나요?"
+              rows={3}
+            />
+            <FormErrorMessage>{errors.action?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.result}>
+            <FormLabel>결과 (Result)</FormLabel>
+            <Textarea
+              {...register('result', {
+                required: '결과를 입력해주세요.',
+              })}
+              placeholder="어떤 결과가 있었나요?"
+              rows={3}
+            />
+            <FormErrorMessage>{errors.result?.message}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl display="flex" alignItems="center">
+            <FormLabel htmlFor="isPublic" mb={0}>
+              공개 여부
+            </FormLabel>
+            <Switch
+              id="isPublic"
+              {...register('isPublic')}
+              defaultChecked
+              colorScheme="primary"
+            />
+          </FormControl>
+
+          <Button type="submit" isLoading={isPending}>
+            등록하기
+          </Button>
+        </Stack>
+      </Box>
+    </Card>
+  );
+} 
