@@ -251,9 +251,21 @@ export const handlers = [
   }),
 
   http.post('/api/resumes', async ({ request }) => {
-    const resume = await request.json();
-    const newResume = storage.addResume(resume);
-    return HttpResponse.json(newResume, { status: 201 });
+    const body = await request.json();
+    
+    const resume = {
+      id: Date.now(),
+      ...body,
+      selfIntroductionId: body.selfIntroductionId || null,
+      projects: body.projects || [],
+      isPublic: body.isPublic ?? false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    storage.addResume(resume);
+
+    return HttpResponse.json(resume, { status: 201 });
   }),
 
   http.put('/api/resumes/:id', async ({ params, request }) => {

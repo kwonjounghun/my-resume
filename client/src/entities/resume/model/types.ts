@@ -1,15 +1,23 @@
 export interface Resume {
   id: number;
-  userId: number;
-  selfIntroductionId: number;
   title: string;
   content: string;
+  selfIntroductionId: number | null;
+  projects: number[];
+  isPublic: boolean;
   createdAt: string;
   updatedAt: string;
-  isPublic: boolean;
-  projects: number[];
-  companyWishlist: number[];
 }
+
+export interface CreateResumeRequest {
+  title: string;
+  content: string;
+  selfIntroductionId?: number;
+  projects?: number[];
+  isPublic?: boolean;
+}
+
+export interface CreateResumeResponse extends Resume {}
 
 export interface ResumeListResponse {
   resumes: Resume[];
