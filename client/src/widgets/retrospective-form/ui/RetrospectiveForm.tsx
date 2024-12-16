@@ -18,21 +18,28 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { CreateRetrospectiveRequest } from '@/entities/retrospective/model/types';
+import { CreateRetrospectiveRequest, Retrospective } from '@/entities/retrospective/model/types';
 import { createRetrospective } from '@/entities/retrospective/api/createRetrospective';
+import { updateRetrospective } from '@/entities/retrospective/api/updateRetrospective';
 import { useState } from 'react';
 import Link from 'next/link';
 import { FiArrowLeft } from 'react-icons/fi';
 
 interface RetrospectiveFormProps {
+  mode: 'create' | 'edit';
+  initialData?: Retrospective;
   onSuccess?: () => void;
 }
 
-export default function RetrospectiveForm({ onSuccess }: RetrospectiveFormProps) {
+export default function RetrospectiveForm({
+  mode = 'create',
+  initialData,
+  onSuccess,
+}: RetrospectiveFormProps) {
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywords, setKeywords] = useState<string[]>(initialData?.keywords || []);
   const [newKeyword, setNewKeyword] = useState('');
 
   const {
@@ -41,12 +48,20 @@ export default function RetrospectiveForm({ onSuccess }: RetrospectiveFormProps)
     formState: { errors },
   } = useForm<CreateRetrospectiveRequest>({
     defaultValues: {
-      isPublic: true,
-      keywords: [],
+      title: initialData?.title || '',
+      company: initialData?.company || '',
+      startDate: initialData?.startDate || '',
+      endDate: initialData?.endDate || '',
+      situation: initialData?.situation || '',
+      task: initialData?.task || '',
+      action: initialData?.action || '',
+      result: initialData?.result || '',
+      isPublic: initialData?.isPublic ?? true,
+      keywords: initialData?.keywords || [],
     },
   });
 
-  const { mutate, isPending } = useMutation({
+  const createMutation = useMutation({
     mutationFn: createRetrospective,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['retrospectives'] });
@@ -65,12 +80,32 @@ export default function RetrospectiveForm({ onSuccess }: RetrospectiveFormProps)
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<Retrospective> }) =>
+      updateRetrospective(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['retrospectives'] });
+      toast({
+        title: '회고가 수정되었습니다.',
+        status: 'success',
+      });
+      onSuccess?.();
+      router.push('/retrospectives');
+    },
+    onError: () => {
+      toast({
+        title: '회고 수정에 실패했습니다.',
+        status: 'error',
+      });
+    },
+  });
+
   const handleKeywordAdd = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newKeyword.trim()) {
       e.preventDefault();
       if (keywords.length >= 10) {
         toast({
-          title: '���워드는 최대 10개까지 추가할 수 있습니다.',
+          title: '키워드는 최대 10개까지 추가할 수 있습니다.',
           status: 'warning',
         });
         return;
@@ -87,11 +122,22 @@ export default function RetrospectiveForm({ onSuccess }: RetrospectiveFormProps)
   };
 
   const onSubmit = (data: CreateRetrospectiveRequest) => {
-    mutate({
+    const submitData = {
       ...data,
       keywords,
-    });
+    };
+
+    if (mode === 'create') {
+      createMutation.mutate(submitData);
+    } else if (initialData?.id) {
+      updateMutation.mutate({
+        id: initialData.id,
+        data: submitData,
+      });
+    }
   };
+
+  const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
     <Card p={6}>
@@ -102,13 +148,16 @@ export default function RetrospectiveForm({ onSuccess }: RetrospectiveFormProps)
               <Button
                 variant="ghost"
                 leftIcon={<FiArrowLeft />}
-                color="gray.600"
-                _hover={{ color: 'primary.500' }}
+                sx={{
+                  color: 'gray.600',
+                  _hover: { color: 'primary.500' }
+                }}
               >
                 목록으로
               </Button>
             </Link>
           </Box>
+
           <FormControl isInvalid={!!errors.title}>
             <FormLabel>제목</FormLabel>
             <Input
@@ -254,7 +303,7 @@ export default function RetrospectiveForm({ onSuccess }: RetrospectiveFormProps)
           </FormControl>
 
           <Button type="submit" isLoading={isPending}>
-            등록하기
+            {mode === 'create' ? '등록하기' : '수정하기'}
           </Button>
         </Stack>
       </Box>

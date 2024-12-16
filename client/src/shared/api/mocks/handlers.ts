@@ -59,17 +59,6 @@ export const handlers = [
     });
   }),
 
-  http.post('/api/retrospectives', async ({ request }) => {
-    const retrospective = (await request.json()) as Omit<
-      Retrospective,
-      'id' | 'createdAt' | 'updatedAt'
-    >;
-
-    const newRetrospective = storage.addRetrospective(retrospective);
-
-    return HttpResponse.json(newRetrospective, { status: 201 });
-  }),
-
   http.get('/api/retrospectives/:id', ({ params }) => {
     const { id } = params;
     const retrospectives = storage.getRetrospectives();
@@ -80,6 +69,17 @@ export const handlers = [
     }
 
     return HttpResponse.json(retrospective);
+  }),
+
+  http.post('/api/retrospectives', async ({ request }) => {
+    const retrospective = (await request.json()) as Omit<
+      Retrospective,
+      'id' | 'createdAt' | 'updatedAt'
+    >;
+
+    const newRetrospective = storage.addRetrospective(retrospective);
+
+    return HttpResponse.json(newRetrospective, { status: 201 });
   }),
 
   http.put('/api/retrospectives/:id', async ({ params, request }) => {
