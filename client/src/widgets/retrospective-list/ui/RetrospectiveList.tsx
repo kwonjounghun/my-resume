@@ -90,7 +90,7 @@ export default function RetrospectiveList() {
                 )}
 
                 <Flex gap={2} wrap="wrap">
-                  {retrospective.keywords.map((keyword) => (
+                  {retrospective.keywords?.map((keyword) => (
                     <Tag
                       key={keyword}
                       size="sm"

@@ -1,45 +1,8 @@
 import { http, HttpResponse } from 'msw';
-
-const mockRetrospectives = [
-  {
-    id: 1,
-    title: '프로젝트 A',
-    situation: '상황',
-    task: '과제',
-    action: '행동',
-    result: '결과',
-    createdAt: '2024-01-01T00:00:00.000Z',
-    updatedAt: '2024-01-01T00:00:00.000Z',
-    isPublic: true,
-    keywords: ['React', 'TypeScript'],
-    summary: '프로젝트 요약',
-    company: '회사 A',
-    startDate: '2024-01-01',
-    endDate: '2024-02-01',
-  },
-  {
-    id: 2,
-    title: '프로젝트 B',
-    situation: '상황',
-    task: '과제',
-    action: '행동',
-    result: '결과',
-    createdAt: '2024-02-01T00:00:00.000Z',
-    updatedAt: '2024-02-01T00:00:00.000Z',
-    isPublic: true,
-    keywords: ['Next.js', 'TypeScript'],
-    summary: '프로젝트 요약',
-    company: '회사 B',
-    startDate: '2024-02-01',
-    endDate: '2024-03-01',
-  },
-];
+import { storage } from './storage';
+import { Retrospective } from '@/entities/retrospective/model/types';
 
 export const handlers = [
-  http.get('/api/example', () => {
-    return HttpResponse.json({ message: 'Hello from MSW!' });
-  }),
-
   http.get('/api/retrospectives', ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get('page')) || 1;
@@ -50,10 +13,11 @@ export const handlers = [
     const endDate = url.searchParams.get('endDate');
     const isPublic = url.searchParams.get('isPublic');
 
-    let filteredRetrospectives = [...mockRetrospectives];
+    let retrospectives = storage.getRetrospectives();
 
+    // 필터 적용
     if (keyword) {
-      filteredRetrospectives = filteredRetrospectives.filter(
+      retrospectives = retrospectives.filter(
         (retro) =>
           retro.title.includes(keyword) ||
           retro.keywords.some((k) => k.includes(keyword))
@@ -61,36 +25,84 @@ export const handlers = [
     }
 
     if (company) {
-      filteredRetrospectives = filteredRetrospectives.filter((retro) =>
+      retrospectives = retrospectives.filter((retro) =>
         retro.company.includes(company)
       );
     }
 
     if (startDate) {
-      filteredRetrospectives = filteredRetrospectives.filter(
+      retrospectives = retrospectives.filter(
         (retro) => retro.startDate >= startDate
       );
     }
 
     if (endDate) {
-      filteredRetrospectives = filteredRetrospectives.filter(
+      retrospectives = retrospectives.filter(
         (retro) => retro.endDate <= endDate
       );
     }
 
     if (isPublic !== null) {
-      filteredRetrospectives = filteredRetrospectives.filter(
+      retrospectives = retrospectives.filter(
         (retro) => retro.isPublic === (isPublic === 'true')
       );
     }
 
+    // 페이지네이션 적용
     const start = (page - 1) * limit;
     const end = start + limit;
-    const paginatedRetrospectives = filteredRetrospectives.slice(start, end);
+    const paginatedRetrospectives = retrospectives.slice(start, end);
 
     return HttpResponse.json({
       retrospectives: paginatedRetrospectives,
-      total: filteredRetrospectives.length,
+      total: retrospectives.length,
     });
+  }),
+
+  http.post('/api/retrospectives', async ({ request }) => {
+    const retrospective = (await request.json()) as Omit<
+      Retrospective,
+      'id' | 'createdAt' | 'updatedAt'
+    >;
+
+    const newRetrospective = storage.addRetrospective(retrospective);
+
+    return HttpResponse.json(newRetrospective, { status: 201 });
+  }),
+
+  http.get('/api/retrospectives/:id', ({ params }) => {
+    const { id } = params;
+    const retrospectives = storage.getRetrospectives();
+    const retrospective = retrospectives.find((r) => r.id === Number(id));
+
+    if (!retrospective) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(retrospective);
+  }),
+
+  http.put('/api/retrospectives/:id', async ({ params, request }) => {
+    const { id } = params;
+    const data = (await request.json()) as Partial<Retrospective>;
+
+    const updatedRetrospective = storage.updateRetrospective(Number(id), data);
+
+    if (!updatedRetrospective) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(updatedRetrospective);
+  }),
+
+  http.delete('/api/retrospectives/:id', ({ params }) => {
+    const { id } = params;
+    const success = storage.deleteRetrospective(Number(id));
+
+    if (!success) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return new HttpResponse(null, { status: 204 });
   }),
 ];
