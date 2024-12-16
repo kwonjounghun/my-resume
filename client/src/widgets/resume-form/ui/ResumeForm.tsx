@@ -2,13 +2,16 @@ import {
   Box,
   Button,
   Card,
+  CardBody,
   Checkbox,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Grid,
   Heading,
   Input,
-  Select,
+  Radio,
+  RadioGroup,
   Stack,
   Switch,
   Text,
@@ -134,52 +137,83 @@ export default function ResumeForm({
               name="selfIntroductionId"
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  placeholder="자기소개서를 선택하세요"
-                  value={field.value || ''}
-                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                >
-                  {introductionsData?.introductions.map((intro) => (
-                    <option key={intro.id} value={intro.id}>
-                      {intro.title}
-                    </option>
-                  ))}
-                </Select>
+                <RadioGroup {...field} value={field.value?.toString() || ''}>
+                  <Stack>
+                    {introductionsData?.introductions.map((intro) => (
+                      <Radio
+                        key={intro.id}
+                        value={intro.id.toString()}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      >
+                        <Box>
+                          <Text fontWeight="medium">{intro.title}</Text>
+                          <Text fontSize="sm" color="gray.600" noOfLines={2}>
+                            {intro.content}
+                          </Text>
+                        </Box>
+                      </Radio>
+                    ))}
+                  </Stack>
+                </RadioGroup>
               )}
             />
+            {(!introductionsData?.introductions || introductionsData.introductions.length === 0) && (
+              <Text color="gray.500" mt={2}>
+                작성된 자기소개서가 없습니다.
+              </Text>
+            )}
           </FormControl>
 
           <FormControl>
             <FormLabel>프로젝트 회고 선택</FormLabel>
-            <VStack align="stretch" spacing={2} role="group" aria-label="프로젝트 회고 선택">
+            <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
               {availableRetrospectives.map((retro) => (
                 <Controller
                   key={retro.id}
                   name="projects"
                   control={control}
                   render={({ field }) => (
-                    <Checkbox
-                      id={`project-${retro.id}`}
-                      isChecked={field.value?.includes(retro.id)}
-                      onChange={(e) => {
-                        const newValue = e.target.checked
-                          ? [...(field.value || []), retro.id]
-                          : (field.value || []).filter((id) => id !== retro.id);
+                    <Card
+                      variant="outline"
+                      cursor="pointer"
+                      onClick={() => {
+                        const newValue = field.value?.includes(retro.id)
+                          ? field.value.filter((id) => id !== retro.id)
+                          : [...(field.value || []), retro.id];
                         field.onChange(newValue);
                       }}
+                      bg={field.value?.includes(retro.id) ? 'primary.50' : 'white'}
+                      borderColor={field.value?.includes(retro.id) ? 'primary.500' : 'gray.200'}
+                      _hover={{
+                        borderColor: 'primary.500',
+                      }}
                     >
-                      <Box>
-                        <Text fontWeight="medium">{retro.title}</Text>
-                        <Text fontSize="sm" color="gray.600" noOfLines={2}>
-                          {retro.summary}
-                        </Text>
-                      </Box>
-                    </Checkbox>
+                      <CardBody>
+                        <Stack spacing={2}>
+                          <Checkbox
+                            isChecked={field.value?.includes(retro.id)}
+                            onChange={() => {}}
+                            sx={{
+                              '.chakra-checkbox__control': {
+                                borderColor: field.value?.includes(retro.id) ? 'primary.500' : 'gray.200',
+                              }
+                            }}
+                          >
+                            <Text fontWeight="medium">{retro.title}</Text>
+                          </Checkbox>
+                          <Text fontSize="sm" color="gray.600">
+                            {retro.summary}
+                          </Text>
+                          <Text fontSize="xs" color="gray.500">
+                            {new Date(retro.startDate).toLocaleDateString()} - {new Date(retro.endDate).toLocaleDateString()}
+                          </Text>
+                        </Stack>
+                      </CardBody>
+                    </Card>
                   )}
                 />
               ))}
-            </VStack>
+            </Grid>
             {availableRetrospectives.length === 0 && (
               <Text color="gray.500" mt={2}>
                 요약이 작성된 회고가 없습니다.
