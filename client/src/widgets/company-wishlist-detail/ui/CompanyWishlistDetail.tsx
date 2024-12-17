@@ -13,10 +13,12 @@ import {
   Text,
   useColorModeValue,
   useToast,
+  Spinner,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import { getCompanyWishlistDetail } from '@/entities/company/api/getCompanyWishlistDetail';
+import { getResumeDetail } from '@/entities/resume/api/getResumeDetail';
 import { CompanyWishlistStatus } from '@/entities/company/model/types';
 import NextLink from 'next/link';
 
@@ -52,12 +54,18 @@ export default function CompanyWishlistDetail({ id }: CompanyWishlistDetailProps
   const cardBgColor = useColorModeValue('white', 'gray.700');
   const cardBorderColor = useColorModeValue('gray.200', 'gray.600');
 
-  const { data: companyWishlist, isLoading } = useQuery({
+  const { data: companyWishlist, isLoading: isCompanyLoading } = useQuery({
     queryKey: ['companyWishlist', id],
     queryFn: () => getCompanyWishlistDetail(id),
   });
 
-  if (isLoading) {
+  const { data: resume, isLoading: isResumeLoading } = useQuery({
+    queryKey: ['resume', companyWishlist?.resumeId],
+    queryFn: () => getResumeDetail(companyWishlist?.resumeId!),
+    enabled: !!companyWishlist?.resumeId,
+  });
+
+  if (isCompanyLoading) {
     return null;
   }
 
@@ -96,24 +104,6 @@ export default function CompanyWishlistDetail({ id }: CompanyWishlistDetailProps
         <Stack spacing={4}>
           <Box>
             <Text fontWeight="bold" mb={2}>
-              지원 이력서
-            </Text>
-            {companyWishlist.resumeId ? (
-              <Link
-                as={NextLink}
-                href={`/resumes/${companyWishlist.resumeId}`}
-                color="blue.500"
-                _hover={{ textDecoration: 'none', color: 'blue.600' }}
-              >
-                이력서 보기
-              </Link>
-            ) : (
-              <Text color="gray.500">연결된 이력서가 없습니다.</Text>
-            )}
-          </Box>
-
-          <Box>
-            <Text fontWeight="bold" mb={2}>
               채용공고 링크
             </Text>
             <Link
@@ -125,7 +115,29 @@ export default function CompanyWishlistDetail({ id }: CompanyWishlistDetailProps
               {companyWishlist.link}
             </Link>
           </Box>
-
+          <Box>
+            <Text fontWeight="bold" mb={2}>
+              지원 이력서
+            </Text>
+            {companyWishlist.resumeId ? (
+              isResumeLoading ? (
+                <Spinner size="sm" />
+              ) : resume ? (
+                <Link
+                  as={NextLink}
+                  href={`/resumes/${companyWishlist.resumeId}`}
+                  color="blue.500"
+                  _hover={{ textDecoration: 'none', color: 'blue.600' }}
+                >
+                  {resume.title}
+                </Link>
+              ) : (
+                <Text color="gray.500">이력서를 불러올 수 없습니다.</Text>
+              )
+            ) : (
+              <Text color="gray.500">연결된 이력서가 없습니다.</Text>
+            )}
+          </Box>
           <Box>
             <Text fontWeight="bold" mb={2}>
               지원 상태
