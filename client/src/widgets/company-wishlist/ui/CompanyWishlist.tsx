@@ -61,6 +61,8 @@ export default function CompanyWishlist() {
     <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
       {data?.companyWishlist.map((company) => (
         <Card
+          as={Link}
+          href={`/companies/${company.id}`}
           key={company.id}
           bg={cardBgColor}
           borderColor={cardBorderColor}
