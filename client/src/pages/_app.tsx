@@ -18,28 +18,33 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+      gcTime: 60 * 1000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 export default function App({ Component, pageProps }: AppProps) {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 60 * 1000,
-            gcTime: 60 * 1000,
-            retry: 1,
-            refetchOnWindowFocus: false,
-          },
-        },
-      })
-  );
+  const [isMockingEnabled, setIsMockingEnabled] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
       import('@/shared/api/mocks/browser').then(({ worker }) => {
-        worker.start();
+        worker.start().then(() => {
+          setIsMockingEnabled(true);
+        });
       });
     }
   }, []);
+
+  if (!isMockingEnabled) {
+    return <div>Mocking is enabled</div>;
+  }
 
   return (
     <>

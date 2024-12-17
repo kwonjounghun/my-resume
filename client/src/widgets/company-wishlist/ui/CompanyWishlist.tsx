@@ -12,9 +12,9 @@ import {
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { getCompanyWishlist } from '@/entities/company/api/getCompanyWishlist';
-import { CompanyStatus } from '@/entities/company/model/types';
+import { CompanyWishlistStatus } from '@/entities/company/model/types';
 
-const STATUS_COLOR_MAP: Record<CompanyStatus, string> = {
+const STATUS_COLOR_MAP: Record<CompanyWishlistStatus, string> = {
   DOCUMENT_SUBMITTED: 'blue',
   DOCUMENT_PASSED: 'green',
   DOCUMENT_FAILED: 'red',
@@ -25,7 +25,7 @@ const STATUS_COLOR_MAP: Record<CompanyStatus, string> = {
   FINAL_FAILED: 'red',
 };
 
-const STATUS_LABEL_MAP: Record<CompanyStatus, string> = {
+const STATUS_LABEL_MAP: Record<CompanyWishlistStatus, string> = {
   DOCUMENT_SUBMITTED: '서류 제출',
   DOCUMENT_PASSED: '서류 합격',
   DOCUMENT_FAILED: '서류 불합격',
@@ -49,7 +49,7 @@ export default function CompanyWishlist() {
     return null;
   }
 
-  if (!data?.companyWishlist.length) {
+  if (data?.companyWishlist?.length === 0) {
     return (
       <Box textAlign="center" py={10}>
         <Text color="gray.500">관심 기업이 없습니다.</Text>
@@ -59,7 +59,7 @@ export default function CompanyWishlist() {
 
   return (
     <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-      {data.companyWishlist.map((company) => (
+      {data?.companyWishlist.map((company) => (
         <Card
           key={company.id}
           bg={cardBgColor}
