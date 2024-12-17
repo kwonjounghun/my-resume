@@ -1,4 +1,5 @@
-import { Button, Container, Flex, Heading, Link, VStack } from '@chakra-ui/react';
+import { Button, Container, Flex, Heading, VStack } from '@chakra-ui/react';
+import Link from 'next/link';
 import CompanyWishlist from '@/widgets/company-wishlist/ui/CompanyWishlist';
 
 export default function CompaniesPage() {
