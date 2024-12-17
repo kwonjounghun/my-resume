@@ -1,4 +1,4 @@
-export type CompanyStatus =
+export type CompanyWishlistStatus =
   | 'DOCUMENT_SUBMITTED'
   | 'DOCUMENT_PASSED'
   | 'DOCUMENT_FAILED'
@@ -15,7 +15,27 @@ export interface CompanyWishlist {
   link: string;
   resumeId: number;
   isJobApplied: boolean;
-  status: CompanyStatus;
+  status: CompanyWishlistStatus;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateCompanyWishlistRequest {
+  company: string;
+  link: string;
+  resumeId: number;
+  description?: string;
+  status?: CompanyWishlistStatus;
+}
+
+export interface CreateCompanyWishlistResponse {
+  id: number;
+  company: string;
+  link: string;
+  resumeId: number;
+  isJobApplied: boolean;
+  status: CompanyWishlistStatus;
   description: string;
   createdAt: string;
   updatedAt: string;

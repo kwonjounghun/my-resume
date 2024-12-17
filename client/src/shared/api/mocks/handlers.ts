@@ -1,11 +1,59 @@
-import { http } from 'msw';
-import { storage } from './storage';
+import { http, HttpResponse } from 'msw';
+import { Storage } from './storage';
+
+const storage = new Storage();
 
 // Company wishlist handlers
 export const companyWishlistHandlers = [
-  http.get('/api/company-wishlist', ({ request }) => {
-    const companyWishlist = storage.getCompanyWishlist();
-    return Response.json({ companyWishlist });
+  http.get('/api/company-wishlist', () => {
+    const companyWishlists = storage.getCompanyWishlists();
+    return HttpResponse.json({
+      companyWishlists,
+      total: companyWishlists.length,
+    });
+  }),
+
+  http.get('/api/company-wishlist/:id', ({ params }) => {
+    const { id } = params;
+    const companyWishlist = storage.getCompanyWishlist(Number(id));
+    if (!companyWishlist) {
+      return new HttpResponse(null, { status: 404 });
+    }
+    return HttpResponse.json(companyWishlist);
+  }),
+
+  http.put('/api/company-wishlist/:id', async ({ params, request }) => {
+    const { id } = params;
+    const data = await request.json();
+    const companyWishlist = storage.updateCompanyWishlist(Number(id), {
+      ...data,
+      updatedAt: new Date().toISOString(),
+    });
+    if (!companyWishlist) {
+      return new HttpResponse(null, { status: 404 });
+    }
+    return HttpResponse.json(companyWishlist);
+  }),
+
+  http.delete('/api/company-wishlist/:id', ({ params }) => {
+    const { id } = params;
+    const success = storage.deleteCompanyWishlist(Number(id));
+    if (!success) {
+      return new HttpResponse(null, { status: 404 });
+    }
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.post('/api/company-wishlist', async ({ request }) => {
+    const data = await request.json();
+    const companyWishlist = storage.addCompanyWishlist({
+      ...data,
+      id: Date.now(),
+      isJobApplied: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+    return HttpResponse.json(companyWishlist);
   }),
 ];
 
@@ -140,7 +188,7 @@ export const retrospectiveHandlers = [
 
     // 실제로는 OpenAI API를 호출하여 요약을 생성하지만,
     // 여기서는 간단한 요약을 생성합니다.
-    const summary = `${retrospective.situation} 상황에서 ${retrospective.task}라는 과제를 받아 ${retrospective.action}을 수행하여 ${retrospective.result}를 달성했습니다.`;
+    const summary = `${retrospective.situation} 황에서 ${retrospective.task}라는 과제를 받아 ${retrospective.action}을 수행하여 ${retrospective.result}를 달성했습니다.`;
 
     const updatedRetrospective = storage.updateRetrospective(Number(id), {
       ...retrospective,
