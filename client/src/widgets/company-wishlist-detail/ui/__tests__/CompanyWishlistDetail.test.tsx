@@ -27,6 +27,7 @@ const mockCompanyWishlist = {
   status: 'DOCUMENT_SUBMITTED',
   description: '토스에서 프론트엔드 개발자를 찾습니다.',
   isJobApplied: false,
+  resumeId: 1,
   createdAt: new Date('2024-01-01').toISOString(),
   updatedAt: new Date('2024-01-01').toISOString(),
 };
@@ -54,6 +55,19 @@ describe('CompanyWishlistDetail', () => {
     expect(screen.getByText('설명')).toBeInTheDocument();
     expect(screen.getByText('등록일')).toBeInTheDocument();
     expect(screen.getByText('최종 수정일')).toBeInTheDocument();
+    expect(screen.getByText('지원 이력서')).toBeInTheDocument();
+    expect(screen.getByText('이력서 보기')).toBeInTheDocument();
+  });
+
+  it('should show message when no resume is linked', async () => {
+    const mockCompanyWishlistWithoutResume = {
+      ...mockCompanyWishlist,
+      resumeId: null,
+    };
+    (getCompanyWishlistDetail as jest.Mock).mockResolvedValue(mockCompanyWishlistWithoutResume);
+    renderComponent(1);
+
+    expect(await screen.findByText('연결된 이력서가 없습니다.')).toBeInTheDocument();
   });
 
   it('should show error message when company wishlist not found', async () => {

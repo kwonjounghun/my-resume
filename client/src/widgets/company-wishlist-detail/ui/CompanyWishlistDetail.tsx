@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
 import { getCompanyWishlistDetail } from '@/entities/company/api/getCompanyWishlistDetail';
 import { CompanyWishlistStatus } from '@/entities/company/model/types';
+import NextLink from 'next/link';
 
 const STATUS_COLOR_MAP: Record<CompanyWishlistStatus, string> = {
   DOCUMENT_SUBMITTED: 'blue',
@@ -93,6 +94,24 @@ export default function CompanyWishlistDetail({ id }: CompanyWishlistDetailProps
 
       <CardBody>
         <Stack spacing={4}>
+          <Box>
+            <Text fontWeight="bold" mb={2}>
+              지원 이력서
+            </Text>
+            {companyWishlist.resumeId ? (
+              <Link
+                as={NextLink}
+                href={`/resumes/${companyWishlist.resumeId}`}
+                color="blue.500"
+                _hover={{ textDecoration: 'none', color: 'blue.600' }}
+              >
+                이력서 보기
+              </Link>
+            ) : (
+              <Text color="gray.500">연결된 이력서가 없습니다.</Text>
+            )}
+          </Box>
+
           <Box>
             <Text fontWeight="bold" mb={2}>
               채용공고 링크
