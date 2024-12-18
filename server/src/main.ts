@@ -2,9 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // API 전역 프리픽스 설정
+  app.setGlobalPrefix('api');
+
+  // 로깅 인터셉터 전역 설정
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   // CORS 설정
   app.enableCors({
@@ -31,9 +38,9 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('docs', app, document);
 
-  const port = process.env.PORT || 4000;
+  const port = process.env.PORT || 8080;
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}`);
 }

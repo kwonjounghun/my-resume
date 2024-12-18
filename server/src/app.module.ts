@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { IntroductionModule } from './introduction/introduction.module';
 
 @Module({
   imports: [
@@ -9,6 +10,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       envFilePath: '.env',
     }),
     MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/resume-builder'),
+    IntroductionModule,
   ],
   controllers: [],
   providers: [],
