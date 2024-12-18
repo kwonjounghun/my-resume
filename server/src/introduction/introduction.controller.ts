@@ -12,9 +12,9 @@ import { IntroductionService } from './introduction.service';
 import { CreateIntroductionDto } from './dto/create-introduction.dto';
 import { UpdateIntroductionDto } from './dto/update-introduction.dto';
 
-@Controller('introduction')
+@Controller('introductions')
 export class IntroductionController {
-  constructor(private readonly introductionService: IntroductionService) {}
+  constructor(private readonly introductionService: IntroductionService) { }
 
   @Post()
   create(@Body() createIntroductionDto: CreateIntroductionDto) {
@@ -22,8 +22,9 @@ export class IntroductionController {
   }
 
   @Get()
-  findAll(@Query('userId') userId: string) {
-    return this.introductionService.findAll(userId);
+  async findAll(@Query('userId') userId: string) {
+    const introductions = await this.introductionService.findAll(userId);
+    return { introductions, total: introductions.length };
   }
 
   @Get(':id')
