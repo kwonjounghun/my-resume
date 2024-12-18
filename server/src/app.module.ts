@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { IntroductionModule } from './introduction/introduction.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { IntroductionModule } from './introduction/introduction.module';
     }),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     IntroductionModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
