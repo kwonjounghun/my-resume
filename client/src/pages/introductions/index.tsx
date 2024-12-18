@@ -1,5 +1,9 @@
+import { NextPage } from 'next';
 import { IntroductionList } from '@/widgets/introduction-list';
+import withAuth from '@/shared/hocs/withAuth';
 
-export default function IntroductionsPage() {
+const IntroductionsPage: NextPage = () => {
   return <IntroductionList />;
-} 
+};
+
+export default withAuth(IntroductionsPage); 

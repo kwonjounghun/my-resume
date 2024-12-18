@@ -1,15 +1,16 @@
 import {
   Box,
+  Button,
   Card,
   CardBody,
+  Container,
   Grid,
-  Heading,
-  Link,
   Stack,
   Tag,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { getCompanyWishlist } from '@/entities/company/api/getCompanyWishlist';
 import { CompanyWishlistStatus } from '@/entities/company/model/types';
@@ -39,7 +40,7 @@ const STATUS_LABEL_MAP: Record<CompanyWishlistStatus, string> = {
 export default function CompanyWishlist() {
   const { data, isLoading } = useQuery({
     queryKey: ['companyWishlist'],
-    queryFn: getCompanyWishlist,
+    queryFn: () => getCompanyWishlist(),
   });
 
   const cardBgColor = useColorModeValue('white', 'gray.700');
@@ -49,11 +50,16 @@ export default function CompanyWishlist() {
     return null;
   }
 
-  if (data?.companyWishlist?.length === 0) {
+  if (!data?.companyWishlist || data.companyWishlist.length === 0) {
     return (
-      <Box textAlign="center" py={10}>
-        <Text color="gray.500">관심 기업이 없습니다.</Text>
-      </Box>
+      <Container maxW="container.xl" py={8}>
+        <Stack spacing={4} align="center">
+          <Text>아직 관심 기업이 없습니다.</Text>
+          <Button as={Link} href="/companies/new">
+            관심 기업 등록하기
+          </Button>
+        </Stack>
+      </Container>
     );
   }
 

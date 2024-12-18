@@ -7,7 +7,7 @@ interface GetResumesParams {
 }
 
 interface GetResumesResponse {
-  items: Resume[];
+  resumes: Resume[];
   total: number;
 }
 

@@ -1,45 +1,64 @@
-import { Box, Container, Flex, Link, Text } from '@chakra-ui/react';
-import NextLink from 'next/link';
+import { Box, Button, Container, Flex, Link as ChakraLink, Stack } from '@chakra-ui/react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useAuthStore } from '@/shared/stores/auth';
+import { logout } from '@/shared/api/auth';
 
-const NAVIGATION_ITEMS = [
-  { name: '회고', path: '/retrospectives' },
-  { name: '이력서', path: '/resumes' },
-  { name: '자기소개', path: '/introductions' },
-  { name: '관심기업', path: '/companies' },
-];
-
-export default function Navigation() {
+export const Navigation = () => {
   const router = useRouter();
+  const { user } = useAuthStore();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/login');
+    } catch (error) {
+      console.error('로그아웃 중 오류가 발생했습니다:', error);
+    }
+  };
+
+  console.log(user);
 
   return (
-    <Box as="nav" py={4} borderBottom="1px" borderColor="gray.200">
+    <Box as="nav" bg="white" boxShadow="sm">
       <Container maxW="container.xl">
-        <Flex align="center" justify="space-between">
-          <Link as={NextLink} href="/" _hover={{ textDecoration: 'none' }}>
-            <Text fontSize="xl" fontWeight="bold" color="primary.500">
-              Resume Builder
-            </Text>
-          </Link>
-          <Flex gap={8}>
-            {NAVIGATION_ITEMS.map((item) => (
-              <Link
-                key={item.path}
-                as={NextLink}
-                href={item.path}
-                color={router.pathname.startsWith(item.path) ? 'primary.500' : 'gray.600'}
-                fontWeight={router.pathname.startsWith(item.path) ? 'semibold' : 'normal'}
-                _hover={{
-                  color: 'primary.500',
-                  textDecoration: 'none',
-                }}
-              >
-                {item.name}
+        <Flex h={16} alignItems="center" justifyContent="space-between">
+          <Stack direction="row" spacing={8} alignItems="center">
+            <Link href="/" passHref>
+              <ChakraLink fontWeight="bold">My Resume</ChakraLink>
+            </Link>
+            {user && (
+              <>
+                <Link href="/retrospectives" passHref>
+                  <ChakraLink>회고</ChakraLink>
+                </Link>
+                <Link href="/resumes" passHref>
+                  <ChakraLink>이력서</ChakraLink>
+                </Link>
+                <Link href="/introductions" passHref>
+                  <ChakraLink>자기소개서</ChakraLink>
+                </Link>
+                <Link href="/companies" passHref>
+                  <ChakraLink>관심 기업</ChakraLink>
+                </Link>
+              </>
+            )}
+          </Stack>
+          <Box>
+            {user ? (
+              <Button variant="ghost" onClick={handleLogout}>
+                로그아웃
+              </Button>
+            ) : (
+              <Link href="/login" passHref>
+                <Button as="a" variant="ghost">
+                  로그인
+                </Button>
               </Link>
-            ))}
-          </Flex>
+            )}
+          </Box>
         </Flex>
       </Container>
     </Box>
   );
-} 
+}; 

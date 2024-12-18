@@ -1,5 +1,9 @@
+import { NextPage } from 'next';
 import { ResumeList } from '@/widgets/resume-list';
+import withAuth from '@/shared/hocs/withAuth';
 
-export default function ResumesPage() {
+const ResumesPage: NextPage = () => {
   return <ResumeList />;
-} 
+};
+
+export default withAuth(ResumesPage); 

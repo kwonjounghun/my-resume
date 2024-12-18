@@ -1,50 +1,49 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth() {
-    // Google 로그인 페이지로 리다이렉트
+  async googleAuth(@Query('returnUrl') returnUrl: string, @Res() res: Response) {
+    // returnUrl을 state 파라미터로 전달
+    const state = returnUrl ? Buffer.from(returnUrl).toString('base64') : '';
+    res.redirect(`${process.env.GOOGLE_AUTH_URL}?state=${state}`);
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
-    const { access_token, user } = await this.authService.login(req.user);
-    
-    // JWT를 쿠키에 저장
-    res.cookie('jwt', access_token, {
+  async googleAuthRedirect(@Query('state') state: string, @Req() req, @Res() res: Response) {
+    const { accessToken, user } = await this.authService.googleLogin(req.user);
+
+    // JWT를 쿠키에 설정
+    res.cookie('jwt', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000, // 24시간
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     });
 
-    // 클라이언트 URL로 리다이렉트
-    const clientUrl = this.configService.get<string>('CLIENT_URL');
-    res.redirect(`${clientUrl}/auth/success?token=${access_token}`);
+    // state가 있으면 디코딩하여 returnUrl로 사용
+    const returnUrl = state ? Buffer.from(state, 'base64').toString() : '/';
+
+    // /auth/success로 리다이렉트하면서 토큰과 returnUrl을 쿼리 파라미터로 전달
+    res.redirect(`${process.env.CLIENT_URL}/auth/success?token=${accessToken}&returnUrl=${encodeURIComponent(returnUrl)}`);
   }
 
-  @Get('profile')
+  @Get('me')
   @UseGuards(AuthGuard('jwt'))
-  getProfile(@Req() req: any) {
+  getProfile(@Req() req) {
     return req.user;
   }
 
-  @Get('logout')
+  @Post('logout')
   async logout(@Res() res: Response) {
     res.clearCookie('jwt');
-    const clientUrl = this.configService.get<string>('CLIENT_URL');
-    res.redirect(clientUrl);
+    res.status(200).send({ message: '로그아웃되었습니다.' });
   }
 } 

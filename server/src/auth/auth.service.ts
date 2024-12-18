@@ -9,11 +9,29 @@ export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
+
+  async googleLogin(user: UserDocument) {
+    const payload = {
+      email: user.email,
+      sub: user._id,
+      name: user.name,
+    };
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        picture: user.picture,
+      },
+    };
+  }
 
   async validateUser(userDetails: any): Promise<UserDocument> {
     const { email, googleId } = userDetails;
-    
+
     const existingUser = await this.userModel.findOne({
       $or: [{ email }, { googleId }],
     });

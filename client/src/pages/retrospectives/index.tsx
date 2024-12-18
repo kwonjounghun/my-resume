@@ -1,5 +1,9 @@
+import { NextPage } from 'next';
 import { RetrospectiveList } from '@/widgets/retrospective-list';
+import withAuth from '@/shared/hocs/withAuth';
 
-export default function RetrospectivesPage() {
+const RetrospectivesPage: NextPage = () => {
   return <RetrospectiveList />;
-} 
+};
+
+export default withAuth(RetrospectivesPage); 

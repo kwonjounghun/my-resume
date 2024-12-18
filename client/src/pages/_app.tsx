@@ -4,7 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState, useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Geist, Geist_Mono } from 'next/font/google';
-import Navigation from '@/widgets/navigation/ui/Navigation';
+import { Navigation } from '@/widgets/navigation/ui/Navigation';
 import theme from '@/shared/lib/theme';
 import '@/shared/ui/globals.css';
 
