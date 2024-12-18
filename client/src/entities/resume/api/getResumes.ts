@@ -1,27 +1,24 @@
-import { ResumeFilters, ResumeListResponse } from '../model/types';
+import { Resume } from '../model/types';
+import { client } from '@/shared/api/client';
 
-export async function getResumes(
-  filters?: ResumeFilters
-): Promise<ResumeListResponse> {
-  let url = '/api/resumes';
+interface GetResumesParams {
+  page?: number;
+  limit?: number;
+}
 
-  if (filters) {
-    const params = new URLSearchParams();
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined) {
-        params.append(key, String(value));
-      }
-    });
-    url += `?${params.toString()}`;
-  }
+interface GetResumesResponse {
+  items: Resume[];
+  total: number;
+}
 
-  const response = await fetch(url, {
-    method: 'GET',
+export const getResumes = async ({
+  page = 1,
+  limit = 10,
+}: GetResumesParams = {}): Promise<GetResumesResponse> => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch resumes');
-  }
-
-  return response.json();
+  return client.get<GetResumesResponse>(`/resumes?${params}`);
 } 

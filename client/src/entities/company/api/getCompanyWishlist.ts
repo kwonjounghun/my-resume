@@ -1,15 +1,24 @@
 import { CompanyWishlist } from '../model/types';
+import { client } from '@/shared/api/client';
 
-interface GetCompanyWishlistResponse {
-  companyWishlist: CompanyWishlist[];
+interface GetCompanyWishlistParams {
+  page?: number;
+  limit?: number;
 }
 
-export const getCompanyWishlist = async (): Promise<GetCompanyWishlistResponse> => {
-  const response = await fetch('/api/company-wishlist');
+interface GetCompanyWishlistResponse {
+  items: CompanyWishlist[];
+  total: number;
+}
 
-  if (!response.ok) {
-    throw new Error('관심기업 목록을 조회하는데 실패했습니다.');
-  }
+export const getCompanyWishlist = async ({
+  page = 1,
+  limit = 10,
+}: GetCompanyWishlistParams = {}): Promise<GetCompanyWishlistResponse> => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
 
-  return response.json();
+  return client.get<GetCompanyWishlistResponse>(`/company-wishlist?${params}`);
 }; 

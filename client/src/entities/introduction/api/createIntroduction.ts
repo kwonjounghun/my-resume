@@ -1,21 +1,11 @@
 import { Introduction } from '../model/types';
+import { client } from '@/shared/api/client';
 
-export type CreateIntroductionRequest = Pick<Introduction, 'title' | 'content'>;
+interface CreateIntroductionData {
+  title: string;
+  content: string;
+}
 
-export async function createIntroduction(
-  data: CreateIntroductionRequest
-): Promise<Introduction> {
-  const response = await fetch('/api/introductions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to create introduction');
-  }
-
-  return response.json();
+export const createIntroduction = async (data: CreateIntroductionData): Promise<Introduction> => {
+  return client.post<Introduction>('/introductions', data);
 } 

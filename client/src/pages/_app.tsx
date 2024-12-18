@@ -40,6 +40,10 @@ export default function App({ Component, pageProps }: AppProps) {
         });
       });
     }
+
+    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_API_MOCKING === 'disabled') {
+      setIsMockingEnabled(true);
+    }
   }, []);
 
   if (!isMockingEnabled) {

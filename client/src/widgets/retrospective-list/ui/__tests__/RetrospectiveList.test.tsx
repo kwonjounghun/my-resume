@@ -98,7 +98,7 @@ describe('회고 목록', () => {
   it('각 회고 카드에 필요한 정보가 표시되어야 한다', async () => {
     const projectA = await screen.findByText('프로젝트 A');
     const card = projectA.closest('a');
-    
+
     expect(card).toBeInTheDocument();
     expect(within(card!).getByText('회사 A')).toBeInTheDocument();
     expect(within(card!).getByText('2024.01.01 - 2024.02.01')).toBeInTheDocument();

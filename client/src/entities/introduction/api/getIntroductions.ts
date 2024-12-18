@@ -1,27 +1,24 @@
-import { IntroductionFilters, IntroductionListResponse } from '../model/types';
+import { Introduction } from '../model/types';
+import { client } from '@/shared/api/client';
 
-export async function getIntroductions(
-  filters?: IntroductionFilters
-): Promise<IntroductionListResponse> {
-  let url = '/api/introductions';
+interface GetIntroductionsParams {
+  page?: number;
+  limit?: number;
+}
 
-  if (filters) {
-    const params = new URLSearchParams();
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined) {
-        params.append(key, String(value));
-      }
-    });
-    url += `?${params.toString()}`;
-  }
+interface GetIntroductionsResponse {
+  items: Introduction[];
+  total: number;
+}
 
-  const response = await fetch(url, {
-    method: 'GET',
+export const getIntroductions = async ({
+  page = 1,
+  limit = 10,
+}: GetIntroductionsParams = {}): Promise<GetIntroductionsResponse> => {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
   });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch introductions');
-  }
-
-  return response.json();
+  return client.get<GetIntroductionsResponse>(`/introductions?${params}`);
 } 

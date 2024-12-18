@@ -1,28 +1,18 @@
 import { CompanyWishlist } from '../model/types';
+import { client } from '@/shared/api/client';
 
-export async function updateCompanyWishlist(
-  id: number,
-  data: Partial<CompanyWishlist>
-): Promise<CompanyWishlist> {
-  try {
-    const response = await fetch(`/api/companies/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+interface UpdateCompanyWishlistData {
+  company: string;
+  link: string;
+  resumeId: string;
+  description: string;
+  isJobApplied: boolean;
+  status: string;
+}
 
-    if (!response.ok) {
-      throw new Error('관심기업을 수정할 수 없습니다.');
-    }
-
-    const updatedCompany = await response.json();
-    return updatedCompany;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-    throw new Error('관심기업을 수정할 수 없습니다.');
-  }
+export const updateCompanyWishlist = async (
+  id: string,
+  data: UpdateCompanyWishlistData
+): Promise<CompanyWishlist> => {
+  return client.put<CompanyWishlist>(`/company-wishlist/${id}`, data);
 } 

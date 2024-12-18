@@ -1,11 +1,6 @@
 import { Introduction } from '../model/types';
+import { client } from '@/shared/api/client';
 
-export async function getIntroduction(id: number): Promise<Introduction> {
-  const response = await fetch(`/api/introductions/${id}`);
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch introduction');
-  }
-
-  return response.json();
+export const getIntroduction = async (id: string): Promise<Introduction> => {
+  return client.get<Introduction>(`/introductions/${id}`);
 } 

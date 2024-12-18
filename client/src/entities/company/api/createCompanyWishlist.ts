@@ -1,19 +1,15 @@
-import { CreateCompanyWishlistRequest, CreateCompanyWishlistResponse } from '../model/types';
+import { CompanyWishlist } from '../model/types';
+import { client } from '@/shared/api/client';
 
-export async function createCompanyWishlist(
-  request: CreateCompanyWishlistRequest
-): Promise<CreateCompanyWishlistResponse> {
-  const response = await fetch('/api/company-wishlist', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(request),
-  });
+interface CreateCompanyWishlistData {
+  company: string;
+  link: string;
+  resumeId: string;
+  description: string;
+  isJobApplied: boolean;
+  status: string;
+}
 
-  if (!response.ok) {
-    throw new Error('Failed to create company wishlist');
-  }
-
-  return response.json();
+export const createCompanyWishlist = async (data: CreateCompanyWishlistData): Promise<CompanyWishlist> => {
+  return client.post<CompanyWishlist>('/company-wishlist', data);
 } 

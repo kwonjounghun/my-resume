@@ -1,28 +1,14 @@
-import { CreateResumeRequest, CreateResumeResponse } from '../model/types';
+import { Resume } from '../model/types';
+import { client } from '@/shared/api/client';
 
-export async function createResume(
-  resume: CreateResumeRequest
-): Promise<CreateResumeResponse> {
-  try {
-    const response = await fetch('/api/resumes', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(resume),
-    });
+interface CreateResumeData {
+  title: string;
+  content: string;
+  selfIntroductionId: string;
+  projects: string[];
+  isPublic: boolean;
+}
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || '이력서 등록에 실패했습니다.');
-    }
-
-    return data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error('알 수 없는 에러가 발생했습니다.');
-  }
+export const createResume = async (data: CreateResumeData): Promise<Resume> => {
+  return client.post<Resume>('/resumes', data);
 } 

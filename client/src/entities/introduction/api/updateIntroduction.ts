@@ -1,25 +1,14 @@
 import { Introduction } from '../model/types';
+import { client } from '@/shared/api/client';
 
 interface UpdateIntroductionData {
   title: string;
   content: string;
 }
 
-export async function updateIntroduction(
-  id: number,
+export const updateIntroduction = async (
+  id: string,
   data: UpdateIntroductionData
-): Promise<Introduction> {
-  const response = await fetch(`/api/introductions/${id}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to update introduction');
-  }
-
-  return response.json();
+): Promise<Introduction> => {
+  return client.put<Introduction>(`/introductions/${id}`, data);
 } 
