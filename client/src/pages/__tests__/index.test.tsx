@@ -15,12 +15,12 @@ jest.mock('next/link', () => {
   };
 });
 
-describe('Home', () => {
+describe('홈페이지', () => {
   beforeEach(() => {
     render(<Home />);
   });
 
-  describe('Hero 섹션', () => {
+  describe('히어로 섹션', () => {
     it('타이틀이 렌더링되어야 한다', () => {
       expect(screen.getByText('개발자를 위한')).toBeInTheDocument();
       expect(screen.getByText('이력서 빌더')).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe('Home', () => {
       ).toBeInTheDocument();
     });
 
-    it('CTA 버튼들이 올바른 링크를 가져야 한다', () => {
+    it('주요 버튼들이 올바른 링크를 가져야 한다', () => {
       const retrospectiveButton = screen.getByRole('link', {
         name: '회고 작성하기',
       });
@@ -45,7 +45,7 @@ describe('Home', () => {
     });
   });
 
-  describe('Features 섹션', () => {
+  describe('기능 소개 섹션', () => {
     it('모든 기능이 렌더링되어야 한다', () => {
       expect(screen.getByText('STAR 기법으로 회고 작성')).toBeInTheDocument();
       expect(screen.getByText('맞춤형 이력서 생성')).toBeInTheDocument();
@@ -71,7 +71,7 @@ describe('Home', () => {
     });
   });
 
-  describe('Steps 섹션', () => {
+  describe('사용 단계 섹션', () => {
     it('섹션 타이틀이 렌더링되어야 한다', () => {
       expect(screen.getByText('이렇게 사용하세요')).toBeInTheDocument();
     });
@@ -99,7 +99,7 @@ describe('Home', () => {
     });
   });
 
-  describe('Value Proposition 섹션', () => {
+  describe('가치 제안 섹션', () => {
     it('섹션 타이틀이 렌더링되어야 한다', () => {
       expect(screen.getByText('더 나은 이력서를 위한 첫걸음')).toBeInTheDocument();
     });

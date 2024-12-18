@@ -7,7 +7,7 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-describe('Navigation', () => {
+describe('네비게이션', () => {
   const mockUseRouter = useRouter as jest.Mock;
 
   beforeEach(() => {
@@ -48,7 +48,7 @@ describe('Navigation', () => {
     expect(resumeLink).toHaveStyle({ color: 'var(--chakra-colors-gray-600)' });
   });
 
-  it('모든 네비게이션 아이템이 올바른 href를 가져야 한다', () => {
+  it('모든 네비게이션 아이템이 올바른 링크를 가져야 한다', () => {
     render(<Navigation />);
     
     const links = screen.getAllByRole('link');

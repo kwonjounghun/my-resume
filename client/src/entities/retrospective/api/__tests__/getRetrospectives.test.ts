@@ -1,6 +1,6 @@
 import { getRetrospectives } from '../getRetrospectives';
 
-describe('getRetrospectives', () => {
+describe('회고 목록 조회', () => {
   const mockResponse = {
     retrospectives: [
       {
@@ -66,12 +66,12 @@ describe('getRetrospectives', () => {
     });
   });
 
-  it('API 호출이 실패하면 에러를 throw 해야 한다', async () => {
+  it('API 호출이 실패하면 에러를 반환해야 한다', async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
         status: 500,
-        statusText: 'Internal Server Error',
+        statusText: '서버 에러',
       })
     ) as jest.Mock;
 

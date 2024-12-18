@@ -43,7 +43,7 @@ const mockResumes = [
   },
 ];
 
-describe('ResumeList', () => {
+describe('이력서 목록', () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

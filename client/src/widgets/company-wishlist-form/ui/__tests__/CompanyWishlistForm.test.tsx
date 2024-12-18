@@ -17,7 +17,7 @@ jest.mock('next/router', () => ({
 jest.mock('@/entities/company/api/createCompanyWishlist');
 jest.mock('@/entities/resume/api/getResumes');
 
-describe('CompanyWishlistForm', () => {
+describe('관심기업 등록 폼', () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

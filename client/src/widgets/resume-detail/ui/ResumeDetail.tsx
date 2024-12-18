@@ -35,7 +35,7 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
 
   const { data: introduction } = useQuery({
     queryKey: ['introduction', resume?.selfIntroductionId],
-    queryFn: () => getIntroduction(resume!.selfIntroductionId),
+    queryFn: () => getIntroduction(Number(resume!.selfIntroductionId)),
     enabled: !!resume?.selfIntroductionId,
   });
 

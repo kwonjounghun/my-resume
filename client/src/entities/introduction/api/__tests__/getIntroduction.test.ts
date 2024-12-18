@@ -1,6 +1,6 @@
 import { getIntroduction } from '../getIntroduction';
 
-describe('getIntroduction', () => {
+describe('자기소개 조회', () => {
   const mockIntroduction = {
     id: 1,
     title: '프론트엔드 개발자 자기소개',
@@ -29,12 +29,12 @@ describe('getIntroduction', () => {
     expect(fetch).toHaveBeenCalledWith('/api/introductions/1');
   });
 
-  it('API 호출이 실패하면 에러를 throw 해야 한다', async () => {
+  it('API 호출이 실패하면 에러를 반환해야 한다', async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
         status: 404,
-        statusText: 'Not Found',
+        statusText: '찾을 수 없음',
       })
     ) as jest.Mock;
 

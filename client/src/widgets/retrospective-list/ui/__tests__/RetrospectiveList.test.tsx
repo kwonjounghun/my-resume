@@ -52,7 +52,7 @@ const mockRetrospectives = [
   },
 ];
 
-describe('RetrospectiveList', () => {
+describe('회고 목록', () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

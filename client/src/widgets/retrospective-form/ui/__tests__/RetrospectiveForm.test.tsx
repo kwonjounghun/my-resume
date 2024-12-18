@@ -124,22 +124,24 @@ describe('RetrospectiveForm', () => {
   });
 
   describe('수정 모드', () => {
-    it('초기 데이터가 폼에 채워져야 한다', () => {
+    it('초기 데이터가 폼에 채워져야 한다', async () => {
       renderForm({ mode: 'edit', initialData: mockRetrospective });
 
-      expect(screen.getByLabelText(/제목/)).toHaveValue('프로젝트 A');
-      expect(screen.getByLabelText(/회사/)).toHaveValue('회사 A');
-      expect(screen.getByLabelText(/시작일/)).toHaveValue('2024-01-01');
-      expect(screen.getByLabelText(/종료일/)).toHaveValue('2024-02-01');
-      expect(screen.getByLabelText(/상황/)).toHaveValue('상황');
-      expect(screen.getByLabelText(/과제/)).toHaveValue('과제');
-      expect(screen.getByLabelText(/행동/)).toHaveValue('행동');
-      expect(screen.getByLabelText(/결과/)).toHaveValue('결과');
-      expect(screen.getByRole('button', { name: '수정하기' })).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByLabelText(/제목/)).toHaveValue('프로젝트 A');
+        expect(screen.getByLabelText(/회사/)).toHaveValue('회사 A');
+        expect(screen.getByLabelText(/시작일/)).toHaveValue('2024-01-01');
+        expect(screen.getByLabelText(/종료일/)).toHaveValue('2024-02-01');
+        expect(screen.getByLabelText(/상황/)).toHaveValue('상황');
+        expect(screen.getByLabelText(/과제/)).toHaveValue('과제');
+        expect(screen.getByLabelText(/행동/)).toHaveValue('행동');
+        expect(screen.getByLabelText(/결과/)).toHaveValue('결과');
+        expect(screen.getByRole('button', { name: '수정하기' })).toBeInTheDocument();
 
-      // 키워드 확인
-      expect(screen.getByText('React')).toBeInTheDocument();
-      expect(screen.getByText('TypeScript')).toBeInTheDocument();
+        // 키워드 확인
+        expect(screen.getByText('React')).toBeInTheDocument();
+        expect(screen.getByText('TypeScript')).toBeInTheDocument();
+      });
     });
 
     it('폼 제출이 성공하면 목록 페이지로 이동해야 한다', async () => {
@@ -160,7 +162,7 @@ describe('RetrospectiveForm', () => {
     });
   });
 
-  it('목록으로 돌아가는 버튼이 렌더링되���야 한다', () => {
+  it('목록으로 돌아가는 버튼이 렌더링되어야 한다', () => {
     renderForm();
     const backToListButton = screen.getByRole('button', { name: /목록으로/ });
     expect(backToListButton).toBeInTheDocument();

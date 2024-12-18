@@ -33,7 +33,7 @@ const mockIntroductions = [
   },
 ];
 
-describe('IntroductionList', () => {
+describe('자기소개 목록', () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

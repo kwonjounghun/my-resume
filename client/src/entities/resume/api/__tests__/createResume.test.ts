@@ -1,6 +1,6 @@
 import { createResume } from '../createResume';
 
-describe('createResume', () => {
+describe('이력서 등록', () => {
   const mockResume = {
     title: '신입 프론트엔드 개발자 이력서',
     content: '안녕하세요. 프론트엔드 개발자입니다.',
@@ -24,7 +24,7 @@ describe('createResume', () => {
     jest.resetAllMocks();
   });
 
-  it('이력서를 성공적으로 등록한다', async () => {
+  it('이력서를 성공적으로 등록해야 한다', async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => mockResponse,
@@ -42,7 +42,7 @@ describe('createResume', () => {
     expect(response).toEqual(mockResponse);
   });
 
-  it('서버 에러가 발생하면 에러를 던진다', async () => {
+  it('서버 에러가 발생하면 에러를 반환해야 한다', async () => {
     const errorMessage = '서버 에러가 발생했습니다.';
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
@@ -52,7 +52,7 @@ describe('createResume', () => {
     await expect(createResume(mockResume)).rejects.toThrow(errorMessage);
   });
 
-  it('네트워크 에러가 발생하면 에러를 던진다', async () => {
+  it('네트워크 에러가 발생하면 에러를 반환해야 한다', async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('네트워크 에러'));
 
     await expect(createResume(mockResume)).rejects.toThrow('네트워크 에러');

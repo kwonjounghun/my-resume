@@ -17,7 +17,7 @@ jest.mock('next/router', () => ({
   useRouter: () => mockRouter,
 }));
 
-describe('ResumeForm', () => {
+describe('이력서 폼', () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -33,7 +33,7 @@ describe('ResumeForm', () => {
         {
           id: 1,
           title: '프론트엔드 개발자 자기소개',
-          content: '자기소개 내용',
+          content: '안녕하세요. 프론트엔드 개발자입니다.',
         },
       ],
     });
@@ -43,25 +43,13 @@ describe('ResumeForm', () => {
           id: 1,
           title: '프로젝트 A',
           summary: '프로젝트 A 요약',
-          startDate: '2024-01-01',
-          endDate: '2024-02-01',
         },
         {
           id: 2,
           title: '프로젝트 B',
           summary: null,
-          startDate: '2024-02-01',
-          endDate: '2024-03-01',
         },
       ],
-    });
-    (createResume as jest.Mock).mockResolvedValue({
-      id: 1,
-      title: '신입 프론트엔드 개발자 이력서',
-      content: '이력서 내용',
-      selfIntroductionId: 1,
-      projects: [1],
-      isPublic: false,
     });
   });
 
@@ -69,7 +57,7 @@ describe('ResumeForm', () => {
     return render(
       <QueryClientProvider client={queryClient}>
         <ChakraProvider>
-          <ResumeForm mode="create" />
+          <ResumeForm onSuccess={() => { }} />
         </ChakraProvider>
       </QueryClientProvider>
     );

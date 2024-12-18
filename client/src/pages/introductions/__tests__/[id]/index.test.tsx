@@ -20,7 +20,7 @@ jest.mock('next/link', () => {
 // Mock getIntroduction API
 jest.mock('@/entities/introduction/api/getIntroduction');
 
-describe('IntroductionDetailPage', () => {
+describe('자기소개 상세 페이지', () => {
   const mockRouter = {
     query: { id: '1' },
   };

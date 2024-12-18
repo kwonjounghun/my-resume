@@ -1,6 +1,6 @@
 import { deleteRetrospective } from '../deleteRetrospective';
 
-describe('deleteRetrospective', () => {
+describe('회고 삭제', () => {
   beforeEach(() => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -20,12 +20,12 @@ describe('deleteRetrospective', () => {
     });
   });
 
-  it('API 호출이 실패하면 에러를 throw 해야 한다', async () => {
+  it('API 호출이 실패하면 에러를 반환해야 한다', async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
         status: 404,
-        statusText: 'Not Found',
+        statusText: '찾을 수 없음',
       })
     ) as jest.Mock;
 

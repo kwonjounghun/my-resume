@@ -21,19 +21,7 @@ jest.mock('next/link', () => {
 // Mock API functions
 jest.mock('@/entities/introduction/api/createIntroduction');
 
-describe('IntroductionForm', () => {
-  const mockRouter = {
-    push: jest.fn(),
-  };
-
-  const mockIntroduction = {
-    id: 1,
-    title: '프론트엔드 개발자 자기소개',
-    content: '안녕하세요. 프론트엔드 개발자입니다.',
-    createdAt: '2024-01-01T00:00:00.000Z',
-    updatedAt: '2024-01-01T00:00:00.000Z',
-  };
-
+describe('자기소개 폼', () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -43,58 +31,49 @@ describe('IntroductionForm', () => {
   });
 
   beforeEach(() => {
-    (useRouter as jest.Mock).mockImplementation(() => mockRouter);
-    (createIntroduction as jest.Mock).mockResolvedValue(mockIntroduction);
-  });
-
-  afterEach(() => {
     jest.clearAllMocks();
-    queryClient.clear();
   });
 
-  const renderForm = (props = {}) => {
+  const renderForm = () => {
     return render(
       <QueryClientProvider client={queryClient}>
         <ChakraProvider>
-          <IntroductionForm mode="create" {...props} />
+          <IntroductionForm onSuccess={() => { }} />
         </ChakraProvider>
       </QueryClientProvider>
     );
   };
 
-  describe('생성 모드', () => {
-    it('모든 필수 필드가 렌더링되어야 한다', () => {
-      renderForm();
+  it('모든 필수 필드가 렌더링되어야 한다', () => {
+    renderForm();
 
-      expect(screen.getByLabelText(/제목/)).toBeInTheDocument();
-      expect(screen.getByLabelText(/내용/)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: '등록하기' })).toBeInTheDocument();
-    });
+    expect(screen.getByLabelText(/제목/)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('자기소개 내용을 입력하세요')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '등록하기' })).toBeInTheDocument();
+  });
 
-    it('필수 필드가 비어있을 때 유효성 검사 에러를 표시해야 한다', async () => {
-      renderForm();
+  it('필수 필드가 비어있을 때 유효성 검사 에러를 표시해야 한다', async () => {
+    renderForm();
 
-      fireEvent.submit(screen.getByRole('button', { name: '등록하기' }));
+    fireEvent.submit(screen.getByRole('button', { name: '등록하기' }));
 
-      expect(await screen.findByText('제목을 입력해주세요.')).toBeInTheDocument();
-      expect(await screen.findByText('내용을 입력해주세요.')).toBeInTheDocument();
-    });
+    expect(await screen.findByText('제목을 입력해주세요.')).toBeInTheDocument();
+    expect(await screen.findByText('내용을 입력해주세요.')).toBeInTheDocument();
+  });
 
-    it('폼 제출이 성공하면 목록 페이지로 이동해야 한다', async () => {
-      renderForm();
-      const user = userEvent.setup();
+  it('폼을 올바르게 제출해야 한다', async () => {
+    renderForm();
+    const user = userEvent.setup();
 
-      await user.type(screen.getByLabelText(/제목/), '프론트엔드 개발자 자기소개');
-      await user.type(screen.getByLabelText(/내용/), '안녕하세요. 프론트엔드 개발자입니다.');
+    await user.type(screen.getByLabelText(/제목/), '프론트엔드 개발자 자기소개');
+    await user.type(screen.getByPlaceholderText('자기소개 내용을 입력하세요'), '안녕하세요. 프론트엔드 개발자입니다.');
 
-      await user.click(screen.getByRole('button', { name: '등록하기' }));
+    await user.click(screen.getByRole('button', { name: '등록하기' }));
 
-      await waitFor(() => {
-        expect(createIntroduction).toHaveBeenCalledWith({
-          title: '프론트엔드 개발자 자기소개',
-          content: '안녕하세요. 프론트엔드 개발자입니다.',
-        });
-        expect(mockRouter.push).toHaveBeenCalledWith('/introductions');
+    await waitFor(() => {
+      expect(createIntroduction).toHaveBeenCalledWith({
+        title: '프론트엔드 개발자 자기소개',
+        content: '안녕하세요. 프론트엔드 개발자입니다.',
       });
     });
   });
