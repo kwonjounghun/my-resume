@@ -6,6 +6,7 @@ import { IntroductionModule } from './introduction/introduction.module';
 import { RetrospectiveModule } from './retrospective/retrospective.module';
 import { ResumeModule } from './resume/resume.module';
 import { CompanyModule } from './company/company.module';
+import { OpenAIService } from './common/services/openai.service';
 
 @Module({
   imports: [
@@ -25,5 +26,7 @@ import { CompanyModule } from './company/company.module';
     ResumeModule,
     CompanyModule,
   ],
+  providers: [OpenAIService],
+  exports: [OpenAIService],
 })
 export class AppModule { } 

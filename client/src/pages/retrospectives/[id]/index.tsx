@@ -72,13 +72,13 @@ export default function RetrospectiveDetailPage() {
 
   const handleDelete = () => {
     if (window.confirm('정말로 삭제하시겠습니까?')) {
-      deleteMutation.mutate(Number(id));
+      deleteMutation.mutate(id);
     }
   };
 
   const handleSummarize = () => {
     if (retrospective) {
-      summarizeMutation.mutate(Number(id));
+      summarizeMutation.mutate(id);
     }
   };
 

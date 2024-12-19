@@ -4,12 +4,14 @@ import { Model } from 'mongoose';
 import { CreateRetrospectiveDto } from './dto/create-retrospective.dto';
 import { UpdateRetrospectiveDto } from './dto/update-retrospective.dto';
 import { Retrospective, RetrospectiveDocument } from './schemas/retrospective.schema';
+import { OpenAIService } from '../common/services/openai.service';
 
 @Injectable()
 export class RetrospectiveService {
   constructor(
     @InjectModel(Retrospective.name)
     private retrospectiveModel: Model<RetrospectiveDocument>,
+    private openAIService: OpenAIService,
   ) { }
 
   async create(createRetrospectiveDto: CreateRetrospectiveDto, userId: string) {
@@ -53,7 +55,7 @@ export class RetrospectiveService {
       throw new NotFoundException('회고를 찾을 수 없습니다.');
     }
 
-    return retrospective;
+    return { ...retrospective.toObject(), id: retrospective._id.toString() };
   }
 
   async remove(id: string, userId: string) {
@@ -66,7 +68,7 @@ export class RetrospectiveService {
       throw new NotFoundException('회고를 찾을 수 없습니다.');
     }
 
-    return retrospective;
+    return { ...retrospective.toObject(), id: retrospective._id.toString() };
   }
 
   async summarize(id: string, userId: string) {
@@ -76,16 +78,32 @@ export class RetrospectiveService {
       throw new UnauthorizedException('STAR 내용이 모두 작성되어야 요약할 수 있습니다.');
     }
 
-    // TODO: OpenAI API를 사용하여 요약 생성
-    const summary = '요약 내용이 여기에 들어갑니다.';
-    const keywords = ['키워드1', '키워드2', '키워드3'];
+    if (retrospective.summary) {
+      throw new UnauthorizedException('이미 요약이 작성되어 있습니다.');
+    }
 
-    const updated = await this.retrospectiveModel.findOneAndUpdate(
-      { _id: id, userId },
-      { summary, keywords },
-      { new: true },
-    );
+    try {
+      const { summary, keywords } = await this.openAIService.summarizeRetrospective(
+        retrospective.situation,
+        retrospective.task,
+        retrospective.action,
+        retrospective.result,
+      );
 
-    return updated;
+      const updated = await this.retrospectiveModel.findOneAndUpdate(
+        { _id: id, userId },
+        { summary, keywords },
+        { new: true },
+      );
+
+      if (!updated) {
+        throw new NotFoundException('회고를 찾을 수 없습니다.');
+      }
+
+      return { ...updated.toObject(), id: updated._id.toString() };
+    } catch (error) {
+      console.error('Summarize Error:', error);
+      throw new Error('회고 요약 생성에 실패했습니다.');
+    }
   }
 } 
