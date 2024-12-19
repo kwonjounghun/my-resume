@@ -14,7 +14,7 @@ export const withAuth = (WrappedComponent: NextPage) => {
 
     useEffect(() => {
       if (!isLoading && !user) {
-        const returnUrl = router.asPath;
+        const returnUrl = location.pathname;
         router.replace(`/login?returnUrl=${encodeURIComponent(returnUrl)}`);
       }
     }, [isLoading, user, router]);

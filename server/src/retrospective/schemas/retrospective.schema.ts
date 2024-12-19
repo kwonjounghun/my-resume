@@ -37,6 +37,9 @@ export class Retrospective {
 
   @Prop({ required: true })
   endDate: Date;
+
+  @Prop()
+  isPublic: boolean;
 }
 
 export const RetrospectiveSchema = SchemaFactory.createForClass(Retrospective); 

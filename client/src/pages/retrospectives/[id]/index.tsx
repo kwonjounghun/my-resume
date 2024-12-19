@@ -10,75 +10,59 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { FiArrowLeft, FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { getRetrospective } from '@/entities/retrospective/api/getRetrospective';
-import { deleteRetrospective } from '@/entities/retrospective/api/deleteRetrospective';
-import { summarizeRetrospective } from '@/entities/retrospective/api/summarizeRetrospective';
+import { useRetrospective, useRetrospectiveDelete, useRetrospectiveSummarize } from '@/features/retrospective/hooks';
+import withAuth from '@/shared/hocs/withAuth';
 
-export default function RetrospectiveDetailPage() {
+function RetrospectiveDetailPage() {
   const router = useRouter();
   const toast = useToast();
-  const queryClient = useQueryClient();
   const { id } = router.query;
 
-  if (typeof id !== 'string') {
-    return null;
-  }
+  const { data: retrospective, isLoading } = useRetrospective(typeof id === 'string' ? id : '');
 
-  const { data: retrospective, isLoading } = useQuery({
-    queryKey: ['retrospective', id],
-    queryFn: () => getRetrospective(id),
-    enabled: !!id,
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteRetrospective,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['retrospectives'] });
-      toast({
-        title: '회고가 삭제되었습니다.',
-        status: 'success',
-      });
-      router.push('/retrospectives');
-    },
-    onError: () => {
-      toast({
-        title: '회고 삭제에 실패했습니다.',
-        status: 'error',
-      });
-    },
-  });
-
-  const summarizeMutation = useMutation({
-    mutationFn: summarizeRetrospective,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['retrospective', id] });
-      toast({
-        title: '회고가 요약되었습니다.',
-        status: 'success',
-      });
-    },
-    onError: () => {
-      toast({
-        title: '회고 요약에 실패했습니다.',
-        status: 'error',
-      });
-    },
-  });
+  const deleteMutation = useRetrospectiveDelete();
+  const summarizeMutation = useRetrospectiveSummarize();
 
   const handleDelete = () => {
     if (window.confirm('정말로 삭제하시겠습니까?')) {
-      deleteMutation.mutate(id);
+      deleteMutation.mutate(id as string, {
+        onSuccess: () => {
+          toast({
+            title: '회고가 삭제되었습니다.',
+            status: 'success',
+          });
+          router.push('/retrospectives');
+        },
+        onError: () => {
+          toast({
+            title: '회고 삭제에 실패했습니다.',
+            status: 'error',
+          });
+        },
+      });
     }
   };
 
   const handleSummarize = () => {
     if (retrospective) {
-      summarizeMutation.mutate(id);
+      summarizeMutation.mutate(id as string, {
+        onSuccess: () => {
+          toast({
+            title: '회고가 요약되었습니다.',
+            status: 'success',
+          });
+        },
+        onError: () => {
+          toast({
+            title: '회고 요약에 실패했습니다.',
+            status: 'error',
+          });
+        },
+      });
     }
   };
 
@@ -247,4 +231,6 @@ export default function RetrospectiveDetailPage() {
       </Stack>
     </Container>
   );
-} 
+}
+
+export default withAuth(RetrospectiveDetailPage);

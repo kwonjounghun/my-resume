@@ -1,8 +1,8 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
-import { RetrospectiveList } from '@/features/retrospective';
 import withAuth from '@/shared/hocs/withAuth';
 import { Button, Heading, Container, Stack, Flex, Text } from '@chakra-ui/react';
+import { RetrospectiveList } from '@/features/retrospective/ui';
 import { useRetrospectives } from '@/features/retrospective/hooks';
 
 const RetrospectivesPage: NextPage = () => {
