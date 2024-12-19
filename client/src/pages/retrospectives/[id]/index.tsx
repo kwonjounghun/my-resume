@@ -25,9 +25,13 @@ export default function RetrospectiveDetailPage() {
   const queryClient = useQueryClient();
   const { id } = router.query;
 
+  if (typeof id !== 'string') {
+    return null;
+  }
+
   const { data: retrospective, isLoading } = useQuery({
     queryKey: ['retrospective', id],
-    queryFn: () => getRetrospective(Number(id)),
+    queryFn: () => getRetrospective(id),
     enabled: !!id,
   });
 

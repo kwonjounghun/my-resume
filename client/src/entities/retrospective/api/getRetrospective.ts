@@ -1,11 +1,6 @@
+import { client } from '@/shared/api/client';
 import { Retrospective } from '../model/types';
 
-export async function getRetrospective(id: number): Promise<Retrospective> {
-  const response = await fetch(`/api/retrospectives/${id}`);
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch retrospective');
-  }
-
-  return response.json();
+export async function getRetrospective(id: string): Promise<Retrospective> {
+  return client.get(`/retrospectives/${id}`);
 } 

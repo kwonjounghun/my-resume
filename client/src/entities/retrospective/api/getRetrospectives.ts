@@ -1,9 +1,10 @@
+import { client } from '@/shared/api/client';
 import { RetrospectiveFilters, RetrospectiveListResponse } from '../model/types';
 
 export async function getRetrospectives(
   filters?: RetrospectiveFilters
 ): Promise<RetrospectiveListResponse> {
-  let url = '/api/retrospectives';
+  let url = '/retrospectives';
 
   if (filters) {
     const params = new URLSearchParams();
@@ -15,13 +16,5 @@ export async function getRetrospectives(
     url += `?${params.toString()}`;
   }
 
-  const response = await fetch(url, {
-    method: 'GET',
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch retrospectives');
-  }
-
-  return response.json();
+  return client.get(url);
 } 

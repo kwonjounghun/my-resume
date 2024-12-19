@@ -8,9 +8,13 @@ export default function EditRetrospectivePage() {
   const router = useRouter();
   const { id } = router.query;
 
+  if (typeof id !== 'string') {
+    return null;
+  }
+
   const { data: retrospective, isLoading } = useQuery({
     queryKey: ['retrospective', id],
-    queryFn: () => getRetrospective(Number(id)),
+    queryFn: () => getRetrospective(id),
     enabled: !!id,
   });
 

@@ -1,9 +1,5 @@
-export async function deleteRetrospective(id: number): Promise<void> {
-  const response = await fetch(`/api/retrospectives/${id}`, {
-    method: 'DELETE',
-  });
+import { client } from '@/shared/api/client';
 
-  if (!response.ok) {
-    throw new Error('Failed to delete retrospective');
-  }
-} 
+export async function deleteRetrospective(id: number): Promise<void> {
+  return client.delete(`/retrospectives/${id}`);
+}

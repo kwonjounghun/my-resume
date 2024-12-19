@@ -1,14 +1,5 @@
 import { Resume } from '../model/types';
-
+import { client } from '@/shared/api/client';
 export async function getResumeDetail(id: number): Promise<Resume | undefined> {
-  try {
-    const response = await fetch(`/api/resumes/${id}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch resume detail');
-    }
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching resume detail:', error);
-    return undefined;
-  }
-} 
+  return client.get(`/resumes/${id}`);
+}

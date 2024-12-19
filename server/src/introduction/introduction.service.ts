@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateIntroductionDto } from './dto/create-introduction.dto';
 import { UpdateIntroductionDto } from './dto/update-introduction.dto';
 import { Introduction, IntroductionDocument } from './schemas/introduction.schema';
@@ -10,47 +10,62 @@ export class IntroductionService {
   constructor(
     @InjectModel(Introduction.name)
     private introductionModel: Model<IntroductionDocument>,
-  ) {}
+  ) { }
 
-  async create(createIntroductionDto: CreateIntroductionDto): Promise<Introduction> {
-    return this.introductionModel.create(createIntroductionDto);
+  async create(createIntroductionDto: CreateIntroductionDto, userId: string) {
+    const created = await this.introductionModel.create({
+      ...createIntroductionDto,
+      userId,
+    });
+    return created;
   }
 
-  async findAll(userId: string): Promise<Introduction[]> {
-    return this.introductionModel.find({ userId }).exec();
-  }
-
-  async findOne(id: string): Promise<Introduction> {
-    if (!isValidObjectId(id)) {
-      throw new NotFoundException(`Introduction with ID ${id} not found`);
-    }
-    const introduction = await this.introductionModel.findById(id).exec();
-    if (!introduction) {
-      throw new NotFoundException(`Introduction with ID ${id} not found`);
-    }
-    return introduction;
-  }
-
-  async update(id: string, updateIntroductionDto: UpdateIntroductionDto): Promise<Introduction> {
-    if (!isValidObjectId(id)) {
-      throw new NotFoundException(`Introduction with ID ${id} not found`);
-    }
-    const updatedIntroduction = await this.introductionModel
-      .findByIdAndUpdate(id, updateIntroductionDto, { new: true })
+  async findAll(userId: string) {
+    const introductions = await this.introductionModel
+      .find({ userId })
+      .sort({ createdAt: -1 })
       .exec();
-    if (!updatedIntroduction) {
-      throw new NotFoundException(`Introduction with ID ${id} not found`);
-    }
-    return updatedIntroduction;
+
+    return { introductions: introductions.map((introduction) => ({ ...introduction.toObject(), id: introduction._id.toString() })), total: introductions.length };
   }
 
-  async remove(id: string): Promise<void> {
-    if (!isValidObjectId(id)) {
-      throw new NotFoundException(`Introduction with ID ${id} not found`);
+  async findOne(id: string, userId: string) {
+    const introduction = await this.introductionModel.findOne({
+      _id: id,
+      userId,
+    });
+
+    if (!introduction) {
+      throw new NotFoundException('자기소개를 찾을 수 없습니다.');
     }
-    const result = await this.introductionModel.deleteOne({ _id: id }).exec();
-    if (result.deletedCount === 0) {
-      throw new NotFoundException(`Introduction with ID ${id} not found`);
+
+    return { ...introduction.toObject(), id: introduction._id.toString() };
+  }
+
+  async update(id: string, updateIntroductionDto: UpdateIntroductionDto, userId: string) {
+    const introduction = await this.introductionModel.findOneAndUpdate(
+      { _id: id, userId },
+      updateIntroductionDto,
+      { new: true },
+    );
+
+    if (!introduction) {
+      throw new NotFoundException('자기소개를 찾을 수 없습니다.');
     }
+
+    return { ...introduction.toObject(), id: introduction._id.toString() };
+  }
+
+  async remove(id: string, userId: string) {
+    const introduction = await this.introductionModel.findOneAndDelete({
+      _id: id,
+      userId,
+    });
+
+    if (!introduction) {
+      throw new NotFoundException('자기소개를 찾을 수 없습니다.');
+    }
+
+    return { ...introduction.toObject(), id: introduction._id.toString() };
   }
 } 

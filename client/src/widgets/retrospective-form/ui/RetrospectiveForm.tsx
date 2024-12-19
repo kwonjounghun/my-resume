@@ -24,6 +24,7 @@ import { updateRetrospective } from '@/entities/retrospective/api/updateRetrospe
 import { useState } from 'react';
 import Link from 'next/link';
 import { FiArrowLeft } from 'react-icons/fi';
+import { formatDateToKorean, parseKoreanDate } from '@/shared/lib/date';
 
 interface RetrospectiveFormProps {
   mode: 'create' | 'edit';
@@ -46,12 +47,13 @@ export default function RetrospectiveForm({
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<CreateRetrospectiveRequest>({
     defaultValues: {
       title: initialData?.title || '',
       company: initialData?.company || '',
-      startDate: initialData?.startDate || '',
-      endDate: initialData?.endDate || '',
+      startDate: initialData?.startDate ? formatDateToKorean(new Date(initialData.startDate)) : '',
+      endDate: initialData?.endDate ? formatDateToKorean(new Date(initialData.endDate)) : '',
       situation: initialData?.situation || '',
       task: initialData?.task || '',
       action: initialData?.action || '',
@@ -62,7 +64,14 @@ export default function RetrospectiveForm({
   });
 
   const createMutation = useMutation({
-    mutationFn: createRetrospective,
+    mutationFn: (data: CreateRetrospectiveRequest) => {
+      const formattedData = {
+        ...data,
+        startDate: data.startDate ? parseKoreanDate(data.startDate).toISOString() : '',
+        endDate: data.endDate ? parseKoreanDate(data.endDate).toISOString() : '',
+      };
+      return createRetrospective(formattedData);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['retrospectives'] });
       toast({
@@ -81,8 +90,14 @@ export default function RetrospectiveForm({
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Retrospective> }) =>
-      updateRetrospective(id, data),
+    mutationFn: ({ id, data }: { id: number; data: Partial<Retrospective> }) => {
+      const formattedData = {
+        ...data,
+        startDate: data.startDate ? parseKoreanDate(data.startDate).toISOString() : '',
+        endDate: data.endDate ? parseKoreanDate(data.endDate).toISOString() : '',
+      };
+      return updateRetrospective(id, formattedData);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['retrospectives'] });
       toast({
@@ -105,7 +120,7 @@ export default function RetrospectiveForm({
       e.preventDefault();
       if (keywords.length >= 10) {
         toast({
-          title: '키워드는 최대 10개까지 추가할 수 있습니다.',
+          title: '키워드는 ���대 10개까지 추가할 수 있습니다.',
           status: 'warning',
         });
         return;
@@ -188,9 +203,20 @@ export default function RetrospectiveForm({
             <FormControl isInvalid={!!errors.startDate}>
               <FormLabel>시작일</FormLabel>
               <Input
-                type="date"
+                type="text"
+                placeholder="YYYY.MM.DD"
                 {...register('startDate', {
                   required: '시작일을 입력해주세요.',
+                  pattern: {
+                    value: /^\d{4}\.\d{2}\.\d{2}$/,
+                    message: 'YYYY.MM.DD 형식으로 입력해주세요.',
+                  },
+                  validate: (value) => {
+                    if (!value) return true;
+                    const startDate = parseKoreanDate(value);
+                    const endDate = parseKoreanDate(getValues('endDate'));
+                    return startDate <= endDate || '시작일은 종료일보다 이전이어야 합니다.';
+                  },
                 })}
               />
               <FormErrorMessage>{errors.startDate?.message}</FormErrorMessage>
@@ -199,9 +225,20 @@ export default function RetrospectiveForm({
             <FormControl isInvalid={!!errors.endDate}>
               <FormLabel>종료일</FormLabel>
               <Input
-                type="date"
+                type="text"
+                placeholder="YYYY.MM.DD"
                 {...register('endDate', {
                   required: '종료일을 입력해주세요.',
+                  pattern: {
+                    value: /^\d{4}\.\d{2}\.\d{2}$/,
+                    message: 'YYYY.MM.DD 형식으로 입력해주세요.',
+                  },
+                  validate: (value) => {
+                    if (!value) return true;
+                    const startDate = parseKoreanDate(getValues('startDate'));
+                    const endDate = parseKoreanDate(value);
+                    return startDate <= endDate || '종료일은 시작일보다 이후여야 합니다.';
+                  },
                 })}
               />
               <FormErrorMessage>{errors.endDate?.message}</FormErrorMessage>

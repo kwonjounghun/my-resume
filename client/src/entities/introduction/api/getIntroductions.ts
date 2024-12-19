@@ -7,7 +7,7 @@ interface GetIntroductionsParams {
 }
 
 interface GetIntroductionsResponse {
-  items: Introduction[];
+  introductions: Introduction[];
   total: number;
 }
 
