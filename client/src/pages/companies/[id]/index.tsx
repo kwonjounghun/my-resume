@@ -13,7 +13,7 @@ export default function CompanyWishlistDetailPage() {
   return (
     <Container maxW="container.lg" py={8}>
       <Box mb={8}>
-        <CompanyWishlistDetail id={Number(id)} />
+        <CompanyWishlistDetail id={id} />
       </Box>
     </Container>
   );

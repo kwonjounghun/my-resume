@@ -14,7 +14,7 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('companies')
+@Controller('company-wishlist')
 @UseGuards(AuthGuard('jwt'))
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) { }

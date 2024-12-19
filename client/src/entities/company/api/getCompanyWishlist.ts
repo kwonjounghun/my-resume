@@ -7,7 +7,7 @@ interface GetCompanyWishlistParams {
 }
 
 interface GetCompanyWishlistResponse {
-  companyWishlist: CompanyWishlist[];
+  companies: CompanyWishlist[];
   total: number;
 }
 

@@ -50,7 +50,7 @@ export default function CompanyWishlist() {
     return null;
   }
 
-  if (!data?.companyWishlist || data.companyWishlist.length === 0) {
+  if (!data?.companies || data.companies.length === 0) {
     return (
       <Container maxW="container.xl" py={8}>
         <Stack spacing={4} align="center">
@@ -65,7 +65,7 @@ export default function CompanyWishlist() {
 
   return (
     <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={6}>
-      {data?.companyWishlist.map((company) => (
+      {data?.companies.map((company) => (
         <Card
           as={Link}
           href={`/companies/${company.id}`}
@@ -83,11 +83,7 @@ export default function CompanyWishlist() {
               <Box>
                 <Link
                   href={company.link}
-                  isExternal
                   color="primary.500"
-                  fontWeight="bold"
-                  fontSize="lg"
-                  _hover={{ textDecoration: 'none', color: 'primary.600' }}
                 >
                   {company.company}
                 </Link>

@@ -21,11 +21,12 @@ import { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CompanyWishlist, CompanyWishlistStatus } from '@/entities/company/model/types';
 import { updateCompanyWishlist } from '@/entities/company/api/updateCompanyWishlist';
-import { getResumes } from '@/entities/resume/api/getResumes';
+import { Resume } from '@/entities/resume/model/types';
 
 interface CompanyWishlistEditFormProps {
-  id: number;
+  id: string;
   initialData: CompanyWishlist;
+  resumes: Resume[];
 }
 
 interface FormData {
@@ -34,18 +35,13 @@ interface FormData {
   status: CompanyWishlistStatus;
   description: string;
   isJobApplied: boolean;
-  resumeId: number;
+  resumeId: string;
 }
 
-export default function CompanyWishlistEditForm({ id, initialData }: CompanyWishlistEditFormProps) {
+export default function CompanyWishlistEditForm({ id, initialData, resumes }: CompanyWishlistEditFormProps) {
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
-
-  const { data: resumes } = useQuery({
-    queryKey: ['resumes'],
-    queryFn: () => getResumes(),
-  });
 
   const {
     register,
@@ -135,7 +131,7 @@ export default function CompanyWishlistEditForm({ id, initialData }: CompanyWish
                 })}
               >
                 <option value="">이력서를 선택해주세요.</option>
-                {resumes?.resumes.map((resume) => (
+                {resumes.map((resume) => (
                   <option key={resume.id} value={resume.id}>
                     {resume.title}
                   </option>
@@ -170,9 +166,7 @@ export default function CompanyWishlistEditForm({ id, initialData }: CompanyWish
             <FormControl isInvalid={!!errors.description}>
               <FormLabel>설명</FormLabel>
               <Textarea
-                {...register('description', {
-                  required: '설명은 필수입니다.',
-                })}
+                {...register('description')}
               />
               <FormErrorMessage>
                 {errors.description && errors.description.message}
