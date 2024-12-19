@@ -1,5 +1,5 @@
 export interface Retrospective {
-  id: number;
+  id: string;
   title: string;
   situation: string;
   task: string;
@@ -35,4 +35,4 @@ export type CreateRetrospectiveRequest = Omit<
   'id' | 'createdAt' | 'updatedAt' | 'summary'
 >;
 
-export interface CreateRetrospectiveResponse extends Retrospective {} 
+export interface CreateRetrospectiveResponse extends Retrospective { } 

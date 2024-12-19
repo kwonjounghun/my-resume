@@ -90,7 +90,7 @@ export default function ResumeForm({
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Resume> }) =>
+    mutationFn: ({ id, data }: { id: string; data: Partial<Resume> }) =>
       updateResume(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['resumes'] });
@@ -168,7 +168,7 @@ export default function ResumeForm({
                       <Radio
                         key={intro.id}
                         value={intro.id.toString()}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        onChange={(e) => field.onChange(e.target.value)}
                       >
                         <Box>
                           <Text fontWeight="medium">{intro.title}</Text>
@@ -217,7 +217,7 @@ export default function ResumeForm({
                         <Stack spacing={2}>
                           <Checkbox
                             isChecked={field.value?.includes(retro.id)}
-                            onChange={() => {}}
+                            onChange={() => { }}
                             sx={{
                               '.chakra-checkbox__control': {
                                 borderColor: field.value?.includes(retro.id) ? 'primary.500' : 'gray.200',

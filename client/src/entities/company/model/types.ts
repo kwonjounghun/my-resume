@@ -9,11 +9,11 @@ export type CompanyWishlistStatus =
   | 'FINAL_FAILED';
 
 export interface CompanyWishlist {
-  id: number;
-  userid: number;
+  id: string;
+  userid: string;
   company: string;
   link: string;
-  resumeId: number;
+  resumeId: string;
   isJobApplied: boolean;
   status: CompanyWishlistStatus;
   description: string;

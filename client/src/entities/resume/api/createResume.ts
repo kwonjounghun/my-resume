@@ -9,6 +9,6 @@ interface CreateResumeData {
   isPublic: boolean;
 }
 
-export const createResume = async (data: CreateResumeData): Promise<Resume> => {
+export const createResume = async (data: Partial<CreateResumeData>): Promise<Resume> => {
   return client.post<Resume>('/resumes', data);
 } 

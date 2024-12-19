@@ -21,7 +21,7 @@ import { getIntroduction } from '@/entities/introduction/api/getIntroduction';
 import { getRetrospective } from '@/entities/retrospective/api/getRetrospective';
 
 interface ResumeDetailProps {
-  id: number;
+  id: string;
 }
 
 export default function ResumeDetail({ id }: ResumeDetailProps) {
@@ -35,7 +35,7 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
 
   const { data: introduction } = useQuery({
     queryKey: ['introduction', resume?.selfIntroductionId],
-    queryFn: () => getIntroduction(Number(resume!.selfIntroductionId)),
+    queryFn: () => getIntroduction(resume?.selfIntroductionId || ''),
     enabled: !!resume?.selfIntroductionId,
   });
 

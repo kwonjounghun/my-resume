@@ -12,7 +12,7 @@ export default function ResumePage() {
 
   return (
     <Container maxW="container.lg" py={8}>
-      <ResumeDetail id={parseInt(id, 10)} />
+      <ResumeDetail id={id} />
     </Container>
   );
 } 

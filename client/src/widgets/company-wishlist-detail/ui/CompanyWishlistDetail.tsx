@@ -45,7 +45,7 @@ const STATUS_LABEL_MAP: Record<CompanyWishlistStatus, string> = {
 };
 
 interface CompanyWishlistDetailProps {
-  id: number;
+  id: string;
 }
 
 export default function CompanyWishlistDetail({ id }: CompanyWishlistDetailProps) {
