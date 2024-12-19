@@ -17,15 +17,13 @@ export const Navigation = () => {
     }
   };
 
-  console.log(user);
-
   return (
     <Box as="nav" bg="white" boxShadow="sm">
       <Container maxW="container.xl">
         <Flex h={16} alignItems="center" justifyContent="space-between">
           <Stack direction="row" spacing={8} alignItems="center">
             <Link href="/" passHref>
-              <ChakraLink fontWeight="bold">My Resume</ChakraLink>
+              My Resume
             </Link>
             {user && (
               <>
