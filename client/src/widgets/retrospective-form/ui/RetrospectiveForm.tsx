@@ -120,7 +120,7 @@ export default function RetrospectiveForm({
       e.preventDefault();
       if (keywords.length >= 10) {
         toast({
-          title: '키워드는 ���대 10개까지 추가할 수 있습니다.',
+          title: '키워드는 최대 10개까지 추가할 수 있습니다.',
           status: 'warning',
         });
         return;
@@ -203,7 +203,7 @@ export default function RetrospectiveForm({
             <FormControl isInvalid={!!errors.startDate}>
               <FormLabel>시작일</FormLabel>
               <Input
-                type="text"
+                type="date"
                 placeholder="YYYY.MM.DD"
                 {...register('startDate', {
                   required: '시작일을 입력해주세요.',
@@ -225,7 +225,7 @@ export default function RetrospectiveForm({
             <FormControl isInvalid={!!errors.endDate}>
               <FormLabel>종료일</FormLabel>
               <Input
-                type="text"
+                type="date"
                 placeholder="YYYY.MM.DD"
                 {...register('endDate', {
                   required: '종료일을 입력해주세요.',

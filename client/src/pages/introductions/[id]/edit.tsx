@@ -31,6 +31,10 @@ export default function IntroductionEditPage() {
   const queryClient = useQueryClient();
   const { id } = router.query;
 
+  if (typeof id !== 'string') {
+    return <div>loading...</div>;
+  }
+
   const {
     register,
     handleSubmit,
@@ -40,7 +44,7 @@ export default function IntroductionEditPage() {
 
   const { data: introduction, isLoading } = useQuery({
     queryKey: ['introduction', id],
-    queryFn: () => getIntroduction(Number(id)),
+    queryFn: () => getIntroduction(id),
     enabled: !!id,
   });
 
@@ -54,7 +58,7 @@ export default function IntroductionEditPage() {
   }, [introduction, reset]);
 
   const { mutate: updateMutation, isPending: isUpdating } = useMutation({
-    mutationFn: (data: FormValues) => updateIntroduction(Number(id), data),
+    mutationFn: (data: FormValues) => updateIntroduction(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['introduction', id] });
       toast({

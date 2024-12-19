@@ -18,13 +18,15 @@ import { getIntroduction } from '@/entities/introduction/api/getIntroduction';
 
 export default function IntroductionDetailPage() {
   const router = useRouter();
-  const toast = useToast();
-  const queryClient = useQueryClient();
   const { id } = router.query;
+
+  if (typeof id !== 'string') {
+    return <div>loading...</div>
+  }
 
   const { data: introduction, isLoading } = useQuery({
     queryKey: ['introduction', id],
-    queryFn: () => getIntroduction(Number(id)),
+    queryFn: () => getIntroduction(id),
     enabled: !!id,
   });
 
@@ -83,7 +85,7 @@ export default function IntroductionDetailPage() {
           </Flex>
         </Flex>
 
-        <Card p={6}>
+        <Card as={Link} href={`/introductions/${introduction.id}/edit`} p={6}>
           <Stack spacing={6}>
             <Box>
               <Heading size="lg" mb={2}>
