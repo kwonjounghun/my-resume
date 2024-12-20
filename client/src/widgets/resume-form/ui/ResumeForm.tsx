@@ -1,37 +1,30 @@
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Box,
-  Button,
-  Card,
-  CardBody,
-  Checkbox,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Grid,
-  Heading,
-  Input,
-  Radio,
-  RadioGroup,
   Stack,
-  Switch,
-  Text,
-  Textarea,
+  Button,
   useToast,
-  VStack,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  Textarea,
+  Select,
+  Checkbox,
 } from '@chakra-ui/react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
-import { useForm, Controller } from 'react-hook-form';
-import Link from 'next/link';
-import { FiArrowLeft } from 'react-icons/fi';
-import { CreateResumeRequest, Resume } from '@/entities/resume/model/types';
-import { createResume } from '@/entities/resume/api/createResume';
-import { updateResume } from '@/entities/resume/api/updateResume';
 import { getIntroductions } from '@/entities/introduction/api/getIntroductions';
 import { getRetrospectives } from '@/entities/retrospective/api/getRetrospectives';
+import { createResume } from '@/entities/resume/api/createResume';
+import { updateResume } from '@/entities/resume/api/updateResume';
+import { CreateResumeRequest, Resume } from '@/entities/resume/model/types';
+import { RetrospectiveSelectModal } from '@/features/resume/ui/RetrospectiveSelectModal';
+import { SelectedRetrospectiveList } from '@/features/resume/ui/SelectedRetrospectiveList';
 
 interface ResumeFormProps {
-  mode: 'create' | 'edit';
+  mode?: 'create' | 'edit';
   initialData?: Resume;
   onSuccess?: () => void;
 }
@@ -44,6 +37,7 @@ export default function ResumeForm({
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: introductionsData } = useQuery({
     queryKey: ['introductions'],
@@ -59,6 +53,8 @@ export default function ResumeForm({
     register,
     handleSubmit,
     control,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<CreateResumeRequest>({
     defaultValues: {
@@ -69,6 +65,11 @@ export default function ResumeForm({
       isPublic: initialData?.isPublic ?? false,
     },
   });
+
+  const selectedProjects = watch('projects');
+  const selectedRetrospectives = retrospectivesData?.retrospectives.filter(
+    (retro) => selectedProjects?.includes(retro.id)
+  ) || [];
 
   const createMutation = useMutation({
     mutationFn: createResume,
@@ -118,173 +119,92 @@ export default function ResumeForm({
     }
   };
 
+  const handleRemoveRetrospective = (id: string) => {
+    setValue(
+      'projects',
+      selectedProjects?.filter((projectId) => projectId !== id) || []
+    );
+  };
+
+  const handleConfirmRetrospectives = (selectedIds: string[]) => {
+    setValue('projects', selectedIds);
+  };
+
   // 요약 내용이 있는 회고만 필터링
   const availableRetrospectives = retrospectivesData?.retrospectives.filter(
     (retro) => retro.summary
   ) || [];
 
   return (
-    <Card p={6}>
-      <Box as="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-        <Stack spacing={6}>
-          <Box display="flex" justifyContent="flex-start">
-            <Link href="/resumes" passHref>
-              <Button
-                variant="ghost"
-                leftIcon={<FiArrowLeft />}
-                sx={{
-                  color: 'gray.600',
-                  _hover: { color: 'primary.500' }
-                }}
-              >
-                목록으로
-              </Button>
-            </Link>
-          </Box>
+    <Box as="form" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <Stack spacing={6}>
+        <FormControl isInvalid={!!errors.title}>
+          <FormLabel>제목</FormLabel>
+          <Input
+            {...register('title')}
+            placeholder="이력서 제목을 입력하세요"
+          />
+          <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
+        </FormControl>
 
-          <FormControl isInvalid={!!errors.title}>
-            <FormLabel>제목</FormLabel>
-            <Input
-              {...register('title', {
-                required: '제목을 입력해주세요.',
-                maxLength: {
-                  value: 100,
-                  message: '제목은 100자 이내로 입력해주세요.',
-                },
-              })}
-              placeholder="이력서 제목을 입력하세요"
-            />
-            <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>자기소개서 선택</FormLabel>
-            <Controller
-              name="selfIntroductionId"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup {...field} value={field.value?.toString() || ''}>
-                  <Stack>
-                    {introductionsData?.introductions.map((intro) => (
-                      <Radio
-                        key={intro.id}
-                        value={intro.id.toString()}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      >
-                        <Box>
-                          <Text fontWeight="medium">{intro.title}</Text>
-                          <Text fontSize="sm" color="gray.600" noOfLines={2}>
-                            {intro.content}
-                          </Text>
-                        </Box>
-                      </Radio>
-                    ))}
-                  </Stack>
-                </RadioGroup>
-              )}
-            />
-            {(!introductionsData?.introductions || introductionsData.introductions.length === 0) && (
-              <Text color="gray.500" mt={2}>
-                작성된 자기소개서가 없습니다.
-              </Text>
-            )}
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>프로젝트 회고 선택</FormLabel>
-            <Grid templateColumns="repeat(auto-fill, minmax(300px, 1fr))" gap={4}>
-              {availableRetrospectives.map((retro) => (
-                <Controller
-                  key={retro.id}
-                  name="projects"
-                  control={control}
-                  render={({ field }) => (
-                    <Card
-                      variant="outline"
-                      cursor="pointer"
-                      onClick={() => {
-                        const newValue = field.value?.includes(retro.id)
-                          ? field.value.filter((id) => id !== retro.id)
-                          : [...(field.value || []), retro.id];
-                        field.onChange(newValue);
-                      }}
-                      bg={field.value?.includes(retro.id) ? 'primary.50' : 'white'}
-                      borderColor={field.value?.includes(retro.id) ? 'primary.500' : 'gray.200'}
-                      _hover={{
-                        borderColor: 'primary.500',
-                      }}
-                    >
-                      <CardBody>
-                        <Stack spacing={2}>
-                          <Checkbox
-                            isChecked={field.value?.includes(retro.id)}
-                            onChange={() => { }}
-                            sx={{
-                              '.chakra-checkbox__control': {
-                                borderColor: field.value?.includes(retro.id) ? 'primary.500' : 'gray.200',
-                              }
-                            }}
-                          >
-                            <Text fontWeight="medium">{retro.title}</Text>
-                          </Checkbox>
-                          <Text fontSize="sm" color="gray.600">
-                            {retro.summary}
-                          </Text>
-                          <Text fontSize="xs" color="gray.500">
-                            {new Date(retro.startDate).toLocaleDateString()} - {new Date(retro.endDate).toLocaleDateString()}
-                          </Text>
-                        </Stack>
-                      </CardBody>
-                    </Card>
-                  )}
-                />
-              ))}
-            </Grid>
-            {availableRetrospectives.length === 0 && (
-              <Text color="gray.500" mt={2}>
-                요약이 작성된 회고가 없습니다.
-              </Text>
-            )}
-          </FormControl>
-
-          <FormControl isInvalid={!!errors.content}>
-            <FormLabel>내용</FormLabel>
-            <Textarea
-              {...register('content', {
-                required: '내용을 입력해주세요.',
-              })}
-              placeholder="이력서 내용을 입력하세요"
-              rows={10}
-            />
-            <FormErrorMessage>{errors.content?.message}</FormErrorMessage>
-          </FormControl>
-
-          <FormControl display="flex" alignItems="center">
-            <FormLabel htmlFor="isPublic" mb={0}>
-              공개 여부
-            </FormLabel>
-            <Controller
-              name="isPublic"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Switch
-                  id="isPublic"
-                  isChecked={value}
-                  onChange={(e) => onChange(e.target.checked)}
-                  colorScheme="primary"
-                />
-              )}
-            />
-          </FormControl>
-
-          <Button
-            type="submit"
-            isLoading={createMutation.isPending || updateMutation.isPending}
+        <FormControl>
+          <FormLabel>자기소개서</FormLabel>
+          <Select
+            {...register('selfIntroductionId')}
+            placeholder="자기소개서를 선택하세요"
           >
-            {mode === 'create' ? '등록하기' : '수정하기'}
-          </Button>
-        </Stack>
-      </Box>
-    </Card>
+            {introductionsData?.introductions.map((intro) => (
+              <option key={intro.id} value={intro.id}>
+                {intro.title}
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel>회고</FormLabel>
+          <SelectedRetrospectiveList
+            retrospectives={selectedRetrospectives}
+            onRemove={handleRemoveRetrospective}
+            onAdd={() => setIsModalOpen(true)}
+          />
+        </FormControl>
+
+        <FormControl isInvalid={!!errors.content}>
+          <FormLabel>내용</FormLabel>
+          <Textarea
+            {...register('content')}
+            placeholder="이력서 내용을 입력하세요"
+            minH="200px"
+          />
+          <FormErrorMessage>{errors.content?.message}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl display="flex" alignItems="center">
+          <Checkbox
+            {...register('isPublic')}
+            colorScheme="blue"
+          >
+            공개
+          </Checkbox>
+        </FormControl>
+
+        <Button
+          type="submit"
+          colorScheme="blue"
+          isLoading={createMutation.isPending || updateMutation.isPending}
+        >
+          {mode === 'create' ? '등록하기' : '수정하기'}
+        </Button>
+      </Stack>
+
+      <RetrospectiveSelectModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        retrospectives={availableRetrospectives}
+        selectedRetrospectiveIds={selectedProjects || []}
+        onConfirm={handleConfirmRetrospectives}
+      />
+    </Box>
   );
 } 
