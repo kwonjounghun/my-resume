@@ -2,11 +2,14 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import withAuth from '@/shared/hocs/withAuth';
 import { Button, Heading, Container, Stack, Flex, Text } from '@chakra-ui/react';
-import { RetrospectiveList } from '@/features/retrospective/ui';
 import { useRetrospectives } from '@/features/retrospective/hooks';
+import { useRetrospectiveFilter } from '@/features/retrospective/hooks/useRetrospectiveFilter';
+import { filterRetrospectives } from '@/features/retrospective/lib/filter';
+import { RetrospectiveList, RetrospectiveFilter } from '@/features/retrospective/ui';
 
 const RetrospectivesPage: NextPage = () => {
   const { data, isLoading } = useRetrospectives();
+  const { filter, setFilter, resetFilter } = useRetrospectiveFilter();
 
   if (isLoading) {
     return (
@@ -15,6 +18,12 @@ const RetrospectivesPage: NextPage = () => {
       </Container>
     );
   }
+
+  const filteredRetrospectives = filterRetrospectives(
+    data?.retrospectives || [],
+    filter
+  );
+
   return (
     <Container maxW="container.xl" py={8}>
       <Stack spacing={8}>
@@ -24,7 +33,12 @@ const RetrospectivesPage: NextPage = () => {
             회고 작성하기
           </Button>
         </Flex>
-        <RetrospectiveList retrospectives={data?.retrospectives || []} />
+        <RetrospectiveFilter
+          filter={filter}
+          onFilterChange={setFilter}
+          onReset={resetFilter}
+        />
+        <RetrospectiveList retrospectives={filteredRetrospectives} />
       </Stack>
     </Container>
   );
