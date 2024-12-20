@@ -10,7 +10,7 @@ export default function EditResumePage() {
 
   const { data: resume, isLoading } = useQuery({
     queryKey: ['resume', id],
-    queryFn: () => getResume(Number(id)),
+    queryFn: () => getResume(id as string),
     enabled: !!id,
   });
 

@@ -92,8 +92,9 @@ export default function ResumeForm({
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Resume> }) =>
       updateResume(id, data),
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['resumes'] });
+      queryClient.invalidateQueries({ queryKey: ['resume', id] });
       toast({
         title: '이력서가 수정되었습니다.',
         status: 'success',
