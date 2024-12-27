@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router';
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const TOKEN_KEY = 'auth_token';
 
@@ -28,7 +26,7 @@ class ApiClient {
     // 2. URL 쿼리 파라미터에서 토큰 확인
     const urlParams = new URLSearchParams(window.location.search);
     const urlToken = urlParams.get('token');
-    
+
     // URL에 토큰이 있으면 localStorage에 저장
     if (urlToken) {
       localStorage.setItem(TOKEN_KEY, urlToken);
@@ -40,12 +38,12 @@ class ApiClient {
 
   private async request<T>(endpoint: string, config: RequestConfig = {}): Promise<T> {
     const { params, ...requestConfig } = config;
-    
+
     // URL 파라미터 처리
     const queryString = params
       ? `?${new URLSearchParams(params).toString()}`
       : '';
-    
+
     const url = `${this.baseUrl}${endpoint}${queryString}`;
 
     // 토큰이 있으면 Authorization 헤더에 추가

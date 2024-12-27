@@ -7,14 +7,12 @@ import {
   Heading,
   Stack,
   Text,
-  useToast,
   Badge,
   HStack,
   VStack,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { FiArrowLeft, FiEdit2 } from 'react-icons/fi';
 import { getResume } from '@/entities/resume/api/getResume';
 import { getIntroduction } from '@/entities/introduction/api/getIntroduction';
@@ -25,9 +23,6 @@ interface ResumeDetailProps {
 }
 
 export default function ResumeDetail({ id }: ResumeDetailProps) {
-  const router = useRouter();
-  const toast = useToast();
-
   const { data: resume, isLoading: isResumeLoading } = useQuery({
     queryKey: ['resume', id],
     queryFn: () => getResume(id),

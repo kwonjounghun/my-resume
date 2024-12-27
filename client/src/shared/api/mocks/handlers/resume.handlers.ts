@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { Storage } from '../storage';
+import { Resume } from '@/entities/resume/model/types';
 
 const storage = new Storage();
 
@@ -11,7 +12,10 @@ export const resumeHandlers = [
 
   http.get('/api/resumes/:id', ({ params }) => {
     const { id } = params;
-    const resume = storage.getResume(Number(id));
+    if (typeof id !== 'string') {
+      return new HttpResponse(null, { status: 400 });
+    }
+    const resume = storage.getResume(id);
 
     if (!resume) {
       return new HttpResponse(
@@ -24,15 +28,18 @@ export const resumeHandlers = [
   }),
 
   http.post('/api/resumes', async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as Resume;
     const resume = storage.addResume(body);
     return HttpResponse.json(resume);
   }),
 
   http.put('/api/resumes/:id', async ({ params, request }) => {
     const { id } = params;
-    const body = await request.json();
-    const resume = storage.updateResume(Number(id), body);
+    const body = await request.json() as Resume;
+    if (typeof id !== 'string') {
+      return new HttpResponse(null, { status: 400 });
+    }
+    const resume = storage.updateResume(id, body);
 
     if (!resume) {
       return new HttpResponse(

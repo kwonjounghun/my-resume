@@ -2,7 +2,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ChakraProvider } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
 import IntroductionForm from '../IntroductionForm';
 import { createIntroduction } from '@/entities/introduction/api/createIntroduction';
 
@@ -13,8 +12,12 @@ jest.mock('next/router', () => ({
 
 // Mock next/link
 jest.mock('next/link', () => {
-  return ({ children, href }: { children: React.ReactNode; href: string }) => {
+  const Link = ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
+  };
+  return {
+    __esModule: true,
+    default: Link,
   };
 });
 

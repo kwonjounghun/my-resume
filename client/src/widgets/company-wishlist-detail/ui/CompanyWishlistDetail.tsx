@@ -12,7 +12,6 @@ import {
   Tag,
   Text,
   useColorModeValue,
-  useToast,
   Spinner,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -50,7 +49,6 @@ interface CompanyWishlistDetailProps {
 
 export default function CompanyWishlistDetail({ id }: CompanyWishlistDetailProps) {
   const router = useRouter();
-  const toast = useToast();
   const cardBgColor = useColorModeValue('white', 'gray.700');
   const cardBorderColor = useColorModeValue('gray.200', 'gray.600');
 
@@ -61,8 +59,8 @@ export default function CompanyWishlistDetail({ id }: CompanyWishlistDetailProps
 
   const { data: resume, isLoading: isResumeLoading } = useQuery({
     queryKey: ['resume', companyWishlist?.resumeId],
-    queryFn: () => getResumeDetail(companyWishlist?.resumeId!),
-    enabled: !!companyWishlist?.resumeId,
+    queryFn: () => getResumeDetail(companyWishlist ? companyWishlist.resumeId : ''),
+    enabled: companyWishlist && typeof companyWishlist.resumeId === 'string',
   });
 
   if (isCompanyLoading) {

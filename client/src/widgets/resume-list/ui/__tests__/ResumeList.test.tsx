@@ -11,8 +11,12 @@ jest.mock('next/router', () => ({
 
 // Mock next/link
 jest.mock('next/link', () => {
-  return ({ children, href }: { children: React.ReactNode; href: string }) => {
+  const Link = ({ children, href }: { children: React.ReactNode; href: string }) => {
     return <a href={href}>{children}</a>;
+  };
+  return {
+    __esModule: true,
+    default: Link,
   };
 });
 
@@ -89,7 +93,7 @@ describe('이력서 목록', () => {
   it('각 이력서 카드에 필요한 정보가 표시되어야 한다', async () => {
     const frontendCard = await screen.findByText('프론트엔드 개발자 이력서');
     const card = frontendCard.closest('a');
-    
+
     expect(card).toBeInTheDocument();
     expect(card).toHaveAttribute('href', '/resumes/1');
     expect(screen.getByText('2024.01.01')).toBeInTheDocument();

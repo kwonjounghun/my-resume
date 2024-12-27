@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { Storage } from '../storage';
+import { Introduction } from '@/entities/introduction/model/types';
 
 const storage = new Storage();
 
@@ -11,7 +12,12 @@ export const introductionHandlers = [
 
   http.get('/api/introductions/:id', ({ params }) => {
     const { id } = params;
-    const introduction = storage.getIntroduction(Number(id));
+
+    if (typeof id !== 'string') {
+      return new HttpResponse(null, { status: 400 });
+    }
+
+    const introduction = storage.getIntroduction(id);
 
     if (!introduction) {
       return new HttpResponse(
@@ -24,15 +30,18 @@ export const introductionHandlers = [
   }),
 
   http.post('/api/introductions', async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as Introduction;
     const introduction = storage.addIntroduction(body);
     return HttpResponse.json(introduction);
   }),
 
   http.put('/api/introductions/:id', async ({ params, request }) => {
     const { id } = params;
-    const body = await request.json();
-    const introduction = storage.updateIntroduction(Number(id), body);
+    const body = await request.json() as Introduction;
+    if (typeof id !== 'string') {
+      return new HttpResponse(null, { status: 400 });
+    }
+    const introduction = storage.updateIntroduction(id, body);
     return HttpResponse.json(introduction);
   }),
 ]; 

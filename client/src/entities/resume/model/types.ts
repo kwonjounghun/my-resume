@@ -17,8 +17,6 @@ export interface CreateResumeRequest {
   isPublic?: boolean;
 }
 
-export interface CreateResumeResponse extends Resume { }
-
 export interface ResumeListResponse {
   resumes: Resume[];
   total: number;

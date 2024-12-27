@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   CardBody,
@@ -18,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CompanyWishlist, CompanyWishlistStatus } from '@/entities/company/model/types';
 import { updateCompanyWishlist } from '@/entities/company/api/updateCompanyWishlist';
 import { Resume } from '@/entities/resume/model/types';
