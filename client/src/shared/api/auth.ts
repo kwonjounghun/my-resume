@@ -1,5 +1,5 @@
 import { client } from '@/shared/api/client';
-import { AuthResponse, User } from '@/shared/types/auth';
+import { User } from '@/shared/types/auth';
 
 export const loginWithGoogle = async (returnUrl?: string): Promise<void> => {
   const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;

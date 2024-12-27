@@ -34,5 +34,3 @@ export type CreateRetrospectiveRequest = Omit<
   Retrospective,
   'id' | 'createdAt' | 'updatedAt' | 'summary'
 >;
-
-export interface CreateRetrospectiveResponse extends Retrospective { } 

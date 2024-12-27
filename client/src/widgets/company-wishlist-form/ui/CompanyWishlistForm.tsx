@@ -84,7 +84,7 @@ export function CompanyWishlistForm({ onSuccess }: CompanyWishlistFormProps) {
             })}
           >
             <option value="">이력서를 선택하세요</option>
-            {resumes?.resumes.map((resume: { id: number; title: string }) => (
+            {resumes?.resumes.map((resume: { id: string; title: string }) => (
               <option key={resume.id} value={resume.id}>
                 {resume.title}
               </option>

@@ -52,7 +52,6 @@ export default function ResumeForm({
   const {
     register,
     handleSubmit,
-    control,
     watch,
     setValue,
     formState: { errors },

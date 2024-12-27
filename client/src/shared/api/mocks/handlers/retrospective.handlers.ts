@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { Storage } from '../storage';
+import { Retrospective } from '@/entities/retrospective/model/types';
 
 const storage = new Storage();
 
@@ -11,7 +12,10 @@ export const retrospectiveHandlers = [
 
   http.get('/api/retrospectives/:id', ({ params }) => {
     const { id } = params;
-    const retrospective = storage.getRetrospective(Number(id));
+    if (typeof id !== 'string') {
+      return new HttpResponse(null, { status: 400 });
+    }
+    const retrospective = storage.getRetrospective(id);
 
     if (!retrospective) {
       return new HttpResponse(
@@ -24,27 +28,36 @@ export const retrospectiveHandlers = [
   }),
 
   http.post('/api/retrospectives', async ({ request }) => {
-    const body = await request.json();
+    const body = await request.json() as Retrospective;
     const retrospective = storage.addRetrospective(body);
     return HttpResponse.json(retrospective);
   }),
 
   http.put('/api/retrospectives/:id', async ({ params, request }) => {
     const { id } = params;
-    const body = await request.json();
-    const retrospective = storage.updateRetrospective(Number(id), body);
+    const body = await request.json() as Retrospective;
+    if (typeof id !== 'string') {
+      return new HttpResponse(null, { status: 400 });
+    }
+    const retrospective = storage.updateRetrospective(id, body);
     return HttpResponse.json(retrospective);
   }),
 
   http.delete('/api/retrospectives/:id', ({ params }) => {
     const { id } = params;
-    storage.deleteRetrospective(Number(id));
+    if (typeof id !== 'string') {
+      return new HttpResponse(null, { status: 400 });
+    }
+    storage.deleteRetrospective(id);
     return HttpResponse.json({ message: '회고가 삭제되었습니다.' });
   }),
 
   http.post('/api/retrospectives/:id/summarize', async ({ params }) => {
     const { id } = params;
-    const retrospective = storage.getRetrospective(Number(id));
+    if (typeof id !== 'string') {
+      return new HttpResponse(null, { status: 400 });
+    }
+    const retrospective = storage.getRetrospective(id);
 
     if (!retrospective) {
       return new HttpResponse(
@@ -57,7 +70,7 @@ export const retrospectiveHandlers = [
     // 여기서는 간단한 요약을 생성합니다.
     const summary = `${retrospective.situation} 황에서 ${retrospective.task}라는 과제를 받아 ${retrospective.action}을 수행하여 ${retrospective.result}를 달성했습니다.`;
 
-    const updatedRetrospective = storage.updateRetrospective(Number(id), {
+    const updatedRetrospective = storage.updateRetrospective(id, {
       ...retrospective,
       summary,
     });

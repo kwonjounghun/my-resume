@@ -90,12 +90,12 @@ export class Storage {
     return this.getItem<CompanyWishlist>('company_wishlist');
   }
 
-  getCompanyWishlist(id: number): CompanyWishlist | undefined {
+  getCompanyWishlist(id: string): CompanyWishlist | undefined {
     const companyWishlists = this.getItem<CompanyWishlist>('company_wishlist');
     return companyWishlists.find((item) => item.id === id);
   }
 
-  updateCompanyWishlist(id: number, data: Partial<CompanyWishlist>): CompanyWishlist | undefined {
+  updateCompanyWishlist(id: string, data: Partial<CompanyWishlist>): CompanyWishlist | undefined {
     const companyWishlists = this.getItem<CompanyWishlist>('company_wishlist');
     const index = companyWishlists.findIndex((item) => item.id === id);
     if (index === -1) return undefined;
@@ -106,7 +106,7 @@ export class Storage {
     return updatedItem;
   }
 
-  deleteCompanyWishlist(id: number): boolean {
+  deleteCompanyWishlist(id: string): boolean {
     const companyWishlists = this.getItem<CompanyWishlist>('company_wishlist');
     const index = companyWishlists.findIndex((item) => item.id === id);
     if (index === -1) return false;
@@ -128,12 +128,12 @@ export class Storage {
     return this.getItem<Introduction>('introductions');
   }
 
-  getIntroduction(id: number): Introduction | undefined {
+  getIntroduction(id: string): Introduction | undefined {
     const introductions = this.getItem<Introduction>('introductions');
     return introductions.find((item) => item.id === id);
   }
 
-  updateIntroduction(id: number, data: Partial<Introduction>): Introduction | undefined {
+  updateIntroduction(id: string, data: Partial<Introduction>): Introduction | undefined {
     const introductions = this.getItem<Introduction>('introductions');
     const index = introductions.findIndex((item) => item.id === id);
     if (index === -1) return undefined;
@@ -144,7 +144,7 @@ export class Storage {
     return updatedItem;
   }
 
-  deleteIntroduction(id: number): boolean {
+  deleteIntroduction(id: string): boolean {
     const introductions = this.getItem<Introduction>('introductions');
     const index = introductions.findIndex((item) => item.id === id);
     if (index === -1) return false;
@@ -166,12 +166,12 @@ export class Storage {
     return this.getItem<Resume>('resumes');
   }
 
-  getResume(id: number): Resume | undefined {
+  getResume(id: string): Resume | undefined {
     const resumes = this.getItem<Resume>('resumes');
     return resumes.find((item) => item.id === id);
   }
 
-  updateResume(id: number, data: Partial<Resume>): Resume | undefined {
+  updateResume(id: string, data: Partial<Resume>): Resume | undefined {
     const resumes = this.getItem<Resume>('resumes');
     const index = resumes.findIndex((item) => item.id === id);
     if (index === -1) return undefined;
@@ -182,7 +182,7 @@ export class Storage {
     return updatedItem;
   }
 
-  deleteResume(id: number): boolean {
+  deleteResume(id: string): boolean {
     const resumes = this.getItem<Resume>('resumes');
     const index = resumes.findIndex((item) => item.id === id);
     if (index === -1) return false;
@@ -204,12 +204,12 @@ export class Storage {
     return this.getItem<Retrospective>('retrospectives');
   }
 
-  getRetrospective(id: number): Retrospective | undefined {
+  getRetrospective(id: string): Retrospective | undefined {
     const retrospectives = this.getItem<Retrospective>('retrospectives');
     return retrospectives.find((item) => item.id === id);
   }
 
-  updateRetrospective(id: number, data: Partial<Retrospective>): Retrospective | undefined {
+  updateRetrospective(id: string, data: Partial<Retrospective>): Retrospective | undefined {
     const retrospectives = this.getItem<Retrospective>('retrospectives');
     const index = retrospectives.findIndex((item) => item.id === id);
     if (index === -1) return undefined;
@@ -220,7 +220,7 @@ export class Storage {
     return updatedItem;
   }
 
-  deleteRetrospective(id: number): boolean {
+  deleteRetrospective(id: string): boolean {
     const retrospectives = this.getItem<Retrospective>('retrospectives');
     const index = retrospectives.findIndex((item) => item.id === id);
     if (index === -1) return false;

@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { FiArrowLeft } from 'react-icons/fi';
-import { CreateIntroductionRequest, createIntroduction } from '@/entities/introduction/api/createIntroduction';
+import { createIntroduction } from '@/entities/introduction/api/createIntroduction';
 import { Introduction } from '@/entities/introduction/model/types';
 
 interface IntroductionFormProps {
@@ -37,7 +37,7 @@ export default function IntroductionForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateIntroductionRequest>({
+  } = useForm<Partial<Introduction>>({
     defaultValues: {
       title: initialData?.title || '',
       content: initialData?.content || '',
@@ -63,7 +63,7 @@ export default function IntroductionForm({
     },
   });
 
-  const onSubmit = (data: CreateIntroductionRequest) => {
+  const onSubmit = (data: Partial<Introduction>) => {
     createMutation.mutate(data);
   };
 

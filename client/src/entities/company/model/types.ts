@@ -17,26 +17,60 @@ export interface CompanyWishlist {
   isJobApplied: boolean;
   status: CompanyWishlistStatus;
   description: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateCompanyWishlistRequest {
   company: string;
   link: string;
-  resumeId: number;
+  resumeId?: string;
   description?: string;
+  isJobApplied?: boolean;
   status?: CompanyWishlistStatus;
 }
 
 export interface CreateCompanyWishlistResponse {
-  id: number;
+  id: string;
   company: string;
   link: string;
-  resumeId: number;
+  resumeId: string;
   isJobApplied: boolean;
   status: CompanyWishlistStatus;
   description: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Company {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate?: string;
+  isCurrentlyEmployed: boolean;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCompanyRequest {
+  name: string;
+  startDate: string;
+  endDate?: string;
+  isCurrentlyEmployed: boolean;
+}
+
+export interface UpdateCompanyRequest {
+  name?: string;
+  startDate?: string;
+  endDate?: string;
+  isCurrentlyEmployed?: boolean;
+}
+
+export interface CompanyResponse {
+  company: Company;
+}
+
+export interface CompaniesResponse {
+  companies: Company[];
 } 

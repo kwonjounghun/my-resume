@@ -1,8 +1,8 @@
 import { client } from '@/shared/api/client';
-import { CreateRetrospectiveRequest, CreateRetrospectiveResponse } from '../model/types';
+import { CreateRetrospectiveRequest, Retrospective } from '../model/types';
 
 export async function createRetrospective(
   data: CreateRetrospectiveRequest
-): Promise<CreateRetrospectiveResponse> {
+): Promise<Retrospective> {
   return client.post('/retrospectives', data);
 }
