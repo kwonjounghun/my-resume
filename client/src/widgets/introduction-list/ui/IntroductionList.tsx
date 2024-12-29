@@ -11,7 +11,6 @@ import {
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { format } from 'date-fns';
 import { getIntroductions } from '@/entities/introduction/api/getIntroductions';
 
 export default function IntroductionList() {
