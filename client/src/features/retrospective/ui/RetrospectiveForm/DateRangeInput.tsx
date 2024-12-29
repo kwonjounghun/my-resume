@@ -47,7 +47,7 @@ export function DateRangeInput({
               return startDate <= endDate || '시작일은 종료일보다 이전이어야 합니다.';
             },
           })}
-          value={format(new Date(startDate), 'yyyy-MM')}
+          value={startDate ? format(new Date(startDate), 'yyyy-MM') : ''}
           onChange={(e) => {
             setValue('startDate', e.target.value);
           }}
@@ -68,7 +68,7 @@ export function DateRangeInput({
               return startDate <= endDate || '종료일은 시작일보다 이후여야 합니다.';
             },
           })}
-          value={format(new Date(endDate), 'yyyy-MM')}
+          value={endDate ? format(new Date(endDate), 'yyyy-MM') : ''}
           onChange={(e) => {
             setValue('endDate', e.target.value);
           }}
