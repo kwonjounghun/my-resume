@@ -14,8 +14,8 @@ export function RetrospectiveDetail({ retrospective }: RetrospectiveDetailProps)
           {retrospective.company}
         </Text>
         <Text fontSize="sm" color="gray.500">
-          {format(new Date(retrospective.startDate), 'yyyy.MM.dd')} -{' '}
-          {format(new Date(retrospective.endDate), 'yyyy.MM.dd')}
+          {format(new Date(retrospective.startDate), 'yyyy.MM')} -{' '}
+          {format(new Date(retrospective.endDate), 'yyyy.MM')}
         </Text>
       </Box>
 
