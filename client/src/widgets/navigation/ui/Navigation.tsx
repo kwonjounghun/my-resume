@@ -4,7 +4,6 @@ import {
   Container,
   Flex,
   HStack,
-  Image,
   Link as ChakraLink,
   useColorModeValue,
 } from '@chakra-ui/react';
