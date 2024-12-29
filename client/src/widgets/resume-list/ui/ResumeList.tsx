@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { format } from 'date-fns';
 import { getResumes } from '@/entities/resume/api/getResumes';
 
 export default function ResumeList() {

@@ -10,7 +10,6 @@ import {
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { format } from 'date-fns';
 import { FiArrowLeft, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { getIntroduction } from '@/entities/introduction/api/getIntroduction';
 
