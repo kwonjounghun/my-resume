@@ -74,9 +74,6 @@ export default function ResumeList() {
                   <Heading size="md" mb={2}>
                     {resume.title}
                   </Heading>
-                  <Text fontSize="sm" color="gray.500">
-                    {format(new Date(resume.createdAt), 'yyyy.MM.dd')}
-                  </Text>
                 </Box>
 
                 <Text noOfLines={3} color="gray.600">

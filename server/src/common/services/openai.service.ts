@@ -15,6 +15,7 @@ export class OpenAIService {
   async summarizeRetrospective(situation: string, task: string, action: string, result: string): Promise<{ summary: string; keywords: string[] }> {
     const prompt = `
 다음은 프로젝트 회고의 STAR(상황, 과제, 행동, 결과) 내용입니다. 이를 분석하여 3줄로 요약하고, 주요 키워드를 추출해주세요.
+키워드는 기술이나 방법론 과 같은 키워들 중심으로 추출해주세요. 예를들면 react, spring, OO디자인 패턴, 유저 스토리, 등과 같은 것들이 있어요.
 
 상황(Situation):
 ${situation}

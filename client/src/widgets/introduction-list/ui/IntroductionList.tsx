@@ -73,9 +73,6 @@ export default function IntroductionList() {
                   <Heading size="md" mb={2}>
                     {introduction.title}
                   </Heading>
-                  <Text fontSize="sm" color="gray.500">
-                    {format(new Date(introduction.createdAt), 'yyyy.MM.dd')}
-                  </Text>
                 </Box>
 
                 <Text noOfLines={3} color="gray.600">

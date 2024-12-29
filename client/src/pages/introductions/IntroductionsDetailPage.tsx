@@ -82,9 +82,6 @@ export default function IntroductionDetailPage({ id }: { id: string }) {
               <Heading size="lg" mb={2}>
                 {introduction.title}
               </Heading>
-              <Text fontSize="sm" color="gray.500">
-                {format(new Date(introduction.createdAt), 'yyyy.MM.dd')}
-              </Text>
             </Box>
 
             <Box>
