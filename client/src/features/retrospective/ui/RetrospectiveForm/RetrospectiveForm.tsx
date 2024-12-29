@@ -55,8 +55,8 @@ export default function RetrospectiveForm({
     defaultValues: {
       title: initialData?.title || '',
       company: initialData?.company || '',
-      startDate: initialData?.startDate ? format(initialData.startDate, 'yyyy-MM-dd') : '',
-      endDate: initialData?.endDate ? format(initialData.endDate, 'yyyy-MM-dd') : '',
+      startDate: initialData?.startDate ? format(initialData.startDate, 'yyyy-MM') : '',
+      endDate: initialData?.endDate ? format(initialData.endDate, 'yyyy-MM') : '',
       situation: initialData?.situation || '',
       task: initialData?.task || '',
       action: initialData?.action || '',
