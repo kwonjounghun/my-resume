@@ -7,6 +7,7 @@ import { RetrospectiveModule } from './retrospective/retrospective.module';
 import { ResumeModule } from './resume/resume.module';
 import { CompanyModule } from './company/company.module';
 import { OpenAIService } from './common/services/openai.service';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { OpenAIService } from './common/services/openai.service';
     RetrospectiveModule,
     ResumeModule,
     CompanyModule,
+    ProfileModule,
   ],
   providers: [OpenAIService],
   exports: [OpenAIService],

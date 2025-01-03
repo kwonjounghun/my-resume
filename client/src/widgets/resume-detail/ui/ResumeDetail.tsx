@@ -17,6 +17,7 @@ import { FiArrowLeft, FiEdit2 } from 'react-icons/fi';
 import { getResume } from '@/entities/resume/api/getResume';
 import { getIntroduction } from '@/entities/introduction/api/getIntroduction';
 import { getRetrospective } from '@/entities/retrospective/api/getRetrospective';
+import { useProfile } from '@/entities/profile/model/hooks/useProfile';
 
 interface ResumeDetailProps {
   id: string;
@@ -34,6 +35,8 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
     enabled: !!resume?.selfIntroductionId,
   });
 
+  const { data: profile, isLoading: isProfileLoading } = useProfile();
+
   const { data: retrospectives } = useQuery({
     queryKey: ['retrospectives', resume?.projects],
     queryFn: async () => {
@@ -45,7 +48,7 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
     enabled: !!resume?.projects.length,
   });
 
-  if (isResumeLoading) {
+  if (isResumeLoading && isProfileLoading) {
     return null;
   }
 
@@ -106,6 +109,28 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
                 ` · 수정일: ${new Date(resume.updatedAt).toLocaleDateString()}`}
             </Text>
           </Stack>
+
+          <Divider />
+
+          <Box>
+            <Text fontSize="xl" fontWeight="bold" mb={4}>
+              기본 정보
+            </Text>
+            <Stack spacing={4}>
+              <HStack>
+                <Text fontWeight="bold" minW="100px">이름</Text>
+                <Text>{profile?.profile.name}</Text>
+              </HStack>
+              <HStack>
+                <Text fontWeight="bold" minW="100px">이메일</Text>
+                <Text>{profile?.profile.email}</Text>
+              </HStack>
+              <HStack>
+                <Text fontWeight="bold" minW="100px">연락처</Text>
+                <Text>{profile?.profile.phone}</Text>
+              </HStack>
+            </Stack>
+          </Box>
 
           <Divider />
 

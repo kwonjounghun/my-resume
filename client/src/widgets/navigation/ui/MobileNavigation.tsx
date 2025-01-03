@@ -1,7 +1,7 @@
 import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FiFileText, FiStar, FiUser, FiBook } from 'react-icons/fi';
+import { FiFileText, FiStar, FiUser, FiBook, FiInfo } from 'react-icons/fi';
 
 interface NavItem {
   href: string;
@@ -10,6 +10,11 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
+  {
+    href: '/profile',
+    label: '기본정보',
+    icon: <FiInfo size={20} />,
+  },
   {
     href: '/retrospectives',
     label: '회고',
