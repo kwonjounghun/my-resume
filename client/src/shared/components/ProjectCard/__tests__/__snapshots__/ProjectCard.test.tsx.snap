@@ -1,0 +1,974 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectCard 레이아웃 변형 horizontal 레이아웃으로 렌더링할 수 있다 1`] = `
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  gap: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #EEEEEE;
+  cursor: pointer;
+  background: #FFFFFF;
+  -webkit-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.emotion-0:hover {
+  background-color: #F5F5F5;
+}
+
+.emotion-1 {
+  -webkit-flex: 6;
+  -ms-flex: 6;
+  flex: 6;
+  min-width: 0;
+}
+
+.emotion-2 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #616161;
+  margin: 0;
+}
+
+.emotion-3 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: calc(24px * 2);
+}
+
+.emotion-4 {
+  -webkit-flex: 4;
+  -ms-flex: 4;
+  flex: 4;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+.emotion-5 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  color: #616161;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: var(--chakra-space-2);
+}
+
+.emotion-7 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: top;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  max-width: 100%;
+  font-weight: var(--chakra-fontWeights-medium);
+  line-height: 1.2;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tag-color: var(--badge-color);
+  --tag-bg: var(--badge-bg);
+  --tag-shadow: var(--badge-shadow);
+  color: var(--tag-color);
+  background: var(--tag-bg);
+  box-shadow: var(--tag-shadow);
+  border-radius: var(--chakra-radii-md);
+  min-height: var(--tag-min-height);
+  min-width: var(--tag-min-width);
+  font-size: var(--tag-font-size);
+  -webkit-padding-inline-start: var(--tag-padding);
+  padding-inline-start: var(--tag-padding-inline);
+  -webkit-padding-inline-end: var(--tag-padding);
+  padding-inline-end: var(--tag-padding-inline);
+  --tag-min-height: var(--chakra-sizes-5);
+  --tag-min-width: var(--chakra-sizes-5);
+  --tag-font-size: var(--chakra-fontSizes-xs);
+  --tag-padding-inline: var(--chakra-space-2);
+  --badge-bg: var(--chakra-colors-gray-100);
+  --badge-color: var(--chakra-colors-gray-800);
+}
+
+.emotion-7:focus-visible,
+.emotion-7[data-focus-visible] {
+  --tag-shadow: var(--chakra-shadows-outline);
+}
+
+.chakra-ui-dark .emotion-7:not([data-theme]),
+[data-theme=dark] .emotion-7:not([data-theme]),
+.emotion-7[data-theme=dark] {
+  --badge-bg: rgba(226, 232, 240, 0.16);
+  --badge-color: var(--chakra-colors-gray-200);
+}
+
+.emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  gap: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #EEEEEE;
+  cursor: pointer;
+  background: #FFFFFF;
+  -webkit-transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.emotion-0:hover {
+  background-color: #F5F5F5;
+}
+
+.emotion-1 {
+  -webkit-flex: 6;
+  -ms-flex: 6;
+  flex: 6;
+  min-width: 0;
+}
+
+.emotion-2 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #616161;
+  margin: 0;
+}
+
+.emotion-3 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: calc(24px * 2);
+}
+
+.emotion-4 {
+  -webkit-flex: 4;
+  -ms-flex: 4;
+  flex: 4;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+.emotion-5 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  color: #616161;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: var(--chakra-space-2);
+}
+
+.emotion-7 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: top;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  max-width: 100%;
+  font-weight: var(--chakra-fontWeights-medium);
+  line-height: 1.2;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tag-color: var(--badge-color);
+  --tag-bg: var(--badge-bg);
+  --tag-shadow: var(--badge-shadow);
+  color: var(--tag-color);
+  background: var(--tag-bg);
+  box-shadow: var(--tag-shadow);
+  border-radius: var(--chakra-radii-md);
+  min-height: var(--tag-min-height);
+  min-width: var(--tag-min-width);
+  font-size: var(--tag-font-size);
+  -webkit-padding-inline-start: var(--tag-padding);
+  padding-inline-start: var(--tag-padding-inline);
+  -webkit-padding-inline-end: var(--tag-padding);
+  padding-inline-end: var(--tag-padding-inline);
+  --tag-min-height: var(--chakra-sizes-5);
+  --tag-min-width: var(--chakra-sizes-5);
+  --tag-font-size: var(--chakra-fontSizes-xs);
+  --tag-padding-inline: var(--chakra-space-2);
+  --badge-bg: var(--chakra-colors-gray-100);
+  --badge-color: var(--chakra-colors-gray-800);
+}
+
+.emotion-7:focus-visible,
+.emotion-7[data-focus-visible] {
+  --tag-shadow: var(--chakra-shadows-outline);
+}
+
+.chakra-ui-dark .emotion-7:not([data-theme]),
+[data-theme=dark] .emotion-7:not([data-theme]),
+.emotion-7[data-theme=dark] {
+  --badge-bg: rgba(226, 232, 240, 0.16);
+  --badge-color: var(--chakra-colors-gray-200);
+}
+
+<div>
+  <div
+    class="emotion-0"
+  >
+    <div
+      class="emotion-1"
+    >
+      <p
+        class="emotion-2"
+      >
+        테크 컴퍼니
+      </p>
+      <h3
+        class="emotion-3"
+      >
+        프로젝트 관리 시스템 개발
+      </h3>
+    </div>
+    <div
+      class="emotion-4"
+    >
+      <span
+        class="emotion-5"
+      >
+        2023.01
+         - 
+        2023.06
+      </span>
+      <div
+        class="chakra-stack emotion-6"
+      >
+        <span
+          class="emotion-7"
+        >
+          React
+        </span>
+        <span
+          class="emotion-7"
+        >
+          TypeScript
+        </span>
+        <span
+          class="emotion-7"
+        >
+          Next.js
+        </span>
+      </div>
+    </div>
+  </div>
+  <span
+    hidden=""
+    id="__chakra_env"
+  />
+</div>
+`;
+
+exports[`ProjectCard 레이아웃 변형 기본적으로 vertical 레이아웃으로 렌더링된다 1`] = `
+.emotion-0 {
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+}
+
+.emotion-0:hover {
+  -webkit-transform: translateY(-4px);
+  -moz-transform: translateY(-4px);
+  -ms-transform: translateY(-4px);
+  transform: translateY(-4px);
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emotion-2 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #616161;
+  margin: 0;
+}
+
+.emotion-3 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: calc(24px * 2);
+}
+
+.emotion-4 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  color: #616161;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: var(--chakra-space-2);
+}
+
+.emotion-6 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: top;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  max-width: 100%;
+  font-weight: var(--chakra-fontWeights-medium);
+  line-height: 1.2;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tag-color: var(--badge-color);
+  --tag-bg: var(--badge-bg);
+  --tag-shadow: var(--badge-shadow);
+  color: var(--tag-color);
+  background: var(--tag-bg);
+  box-shadow: var(--tag-shadow);
+  border-radius: var(--chakra-radii-md);
+  min-height: var(--tag-min-height);
+  min-width: var(--tag-min-width);
+  font-size: var(--tag-font-size);
+  -webkit-padding-inline-start: var(--tag-padding);
+  padding-inline-start: var(--tag-padding-inline);
+  -webkit-padding-inline-end: var(--tag-padding);
+  padding-inline-end: var(--tag-padding-inline);
+  --tag-min-height: var(--chakra-sizes-5);
+  --tag-min-width: var(--chakra-sizes-5);
+  --tag-font-size: var(--chakra-fontSizes-xs);
+  --tag-padding-inline: var(--chakra-space-2);
+  --badge-bg: var(--chakra-colors-gray-100);
+  --badge-color: var(--chakra-colors-gray-800);
+}
+
+.emotion-6:focus-visible,
+.emotion-6[data-focus-visible] {
+  --tag-shadow: var(--chakra-shadows-outline);
+}
+
+.chakra-ui-dark .emotion-6:not([data-theme]),
+[data-theme=dark] .emotion-6:not([data-theme]),
+.emotion-6[data-theme=dark] {
+  --badge-bg: rgba(226, 232, 240, 0.16);
+  --badge-color: var(--chakra-colors-gray-200);
+}
+
+.emotion-0 {
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+}
+
+.emotion-0:hover {
+  -webkit-transform: translateY(-4px);
+  -moz-transform: translateY(-4px);
+  -ms-transform: translateY(-4px);
+  transform: translateY(-4px);
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emotion-2 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #616161;
+  margin: 0;
+}
+
+.emotion-3 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: calc(24px * 2);
+}
+
+.emotion-4 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  color: #616161;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: var(--chakra-space-2);
+}
+
+.emotion-6 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: top;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  max-width: 100%;
+  font-weight: var(--chakra-fontWeights-medium);
+  line-height: 1.2;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tag-color: var(--badge-color);
+  --tag-bg: var(--badge-bg);
+  --tag-shadow: var(--badge-shadow);
+  color: var(--tag-color);
+  background: var(--tag-bg);
+  box-shadow: var(--tag-shadow);
+  border-radius: var(--chakra-radii-md);
+  min-height: var(--tag-min-height);
+  min-width: var(--tag-min-width);
+  font-size: var(--tag-font-size);
+  -webkit-padding-inline-start: var(--tag-padding);
+  padding-inline-start: var(--tag-padding-inline);
+  -webkit-padding-inline-end: var(--tag-padding);
+  padding-inline-end: var(--tag-padding-inline);
+  --tag-min-height: var(--chakra-sizes-5);
+  --tag-min-width: var(--chakra-sizes-5);
+  --tag-font-size: var(--chakra-fontSizes-xs);
+  --tag-padding-inline: var(--chakra-space-2);
+  --badge-bg: var(--chakra-colors-gray-100);
+  --badge-color: var(--chakra-colors-gray-800);
+}
+
+.emotion-6:focus-visible,
+.emotion-6[data-focus-visible] {
+  --tag-shadow: var(--chakra-shadows-outline);
+}
+
+.chakra-ui-dark .emotion-6:not([data-theme]),
+[data-theme=dark] .emotion-6:not([data-theme]),
+.emotion-6[data-theme=dark] {
+  --badge-bg: rgba(226, 232, 240, 0.16);
+  --badge-color: var(--chakra-colors-gray-200);
+}
+
+<div>
+  <div
+    class="emotion-0"
+  >
+    <div
+      class="emotion-1"
+    >
+      <p
+        class="emotion-2"
+      >
+        테크 컴퍼니
+      </p>
+      <h3
+        class="emotion-3"
+      >
+        프로젝트 관리 시스템 개발
+      </h3>
+      <span
+        class="emotion-4"
+      >
+        2023.01
+         - 
+        2023.06
+      </span>
+      <div
+        class="chakra-stack emotion-5"
+      >
+        <span
+          class="emotion-6"
+        >
+          React
+        </span>
+        <span
+          class="emotion-6"
+        >
+          TypeScript
+        </span>
+        <span
+          class="emotion-6"
+        >
+          Next.js
+        </span>
+      </div>
+    </div>
+  </div>
+  <span
+    hidden=""
+    id="__chakra_env"
+  />
+</div>
+`;
+
+exports[`ProjectCard 제목 길이 제한 긴 제목이 있는 경우에도 컴포넌트가 정상적으로 렌더링된다 1`] = `
+.emotion-0 {
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+}
+
+.emotion-0:hover {
+  -webkit-transform: translateY(-4px);
+  -moz-transform: translateY(-4px);
+  -ms-transform: translateY(-4px);
+  transform: translateY(-4px);
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emotion-2 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #616161;
+  margin: 0;
+}
+
+.emotion-3 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: calc(24px * 2);
+}
+
+.emotion-4 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  color: #616161;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: var(--chakra-space-2);
+}
+
+.emotion-6 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: top;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  max-width: 100%;
+  font-weight: var(--chakra-fontWeights-medium);
+  line-height: 1.2;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tag-color: var(--badge-color);
+  --tag-bg: var(--badge-bg);
+  --tag-shadow: var(--badge-shadow);
+  color: var(--tag-color);
+  background: var(--tag-bg);
+  box-shadow: var(--tag-shadow);
+  border-radius: var(--chakra-radii-md);
+  min-height: var(--tag-min-height);
+  min-width: var(--tag-min-width);
+  font-size: var(--tag-font-size);
+  -webkit-padding-inline-start: var(--tag-padding);
+  padding-inline-start: var(--tag-padding-inline);
+  -webkit-padding-inline-end: var(--tag-padding);
+  padding-inline-end: var(--tag-padding-inline);
+  --tag-min-height: var(--chakra-sizes-5);
+  --tag-min-width: var(--chakra-sizes-5);
+  --tag-font-size: var(--chakra-fontSizes-xs);
+  --tag-padding-inline: var(--chakra-space-2);
+  --badge-bg: var(--chakra-colors-gray-100);
+  --badge-color: var(--chakra-colors-gray-800);
+}
+
+.emotion-6:focus-visible,
+.emotion-6[data-focus-visible] {
+  --tag-shadow: var(--chakra-shadows-outline);
+}
+
+.chakra-ui-dark .emotion-6:not([data-theme]),
+[data-theme=dark] .emotion-6:not([data-theme]),
+.emotion-6[data-theme=dark] {
+  --badge-bg: rgba(226, 232, 240, 0.16);
+  --badge-color: var(--chakra-colors-gray-200);
+}
+
+.emotion-0 {
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+}
+
+.emotion-0:hover {
+  -webkit-transform: translateY(-4px);
+  -moz-transform: translateY(-4px);
+  -ms-transform: translateY(-4px);
+  transform: translateY(-4px);
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emotion-2 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #616161;
+  margin: 0;
+}
+
+.emotion-3 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-height: calc(24px * 2);
+}
+
+.emotion-4 {
+  font-family: "Noto Sans KR",sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  color: #616161;
+}
+
+.emotion-5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: var(--chakra-space-2);
+}
+
+.emotion-6 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  vertical-align: top;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  max-width: 100%;
+  font-weight: var(--chakra-fontWeights-medium);
+  line-height: 1.2;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  --tag-color: var(--badge-color);
+  --tag-bg: var(--badge-bg);
+  --tag-shadow: var(--badge-shadow);
+  color: var(--tag-color);
+  background: var(--tag-bg);
+  box-shadow: var(--tag-shadow);
+  border-radius: var(--chakra-radii-md);
+  min-height: var(--tag-min-height);
+  min-width: var(--tag-min-width);
+  font-size: var(--tag-font-size);
+  -webkit-padding-inline-start: var(--tag-padding);
+  padding-inline-start: var(--tag-padding-inline);
+  -webkit-padding-inline-end: var(--tag-padding);
+  padding-inline-end: var(--tag-padding-inline);
+  --tag-min-height: var(--chakra-sizes-5);
+  --tag-min-width: var(--chakra-sizes-5);
+  --tag-font-size: var(--chakra-fontSizes-xs);
+  --tag-padding-inline: var(--chakra-space-2);
+  --badge-bg: var(--chakra-colors-gray-100);
+  --badge-color: var(--chakra-colors-gray-800);
+}
+
+.emotion-6:focus-visible,
+.emotion-6[data-focus-visible] {
+  --tag-shadow: var(--chakra-shadows-outline);
+}
+
+.chakra-ui-dark .emotion-6:not([data-theme]),
+[data-theme=dark] .emotion-6:not([data-theme]),
+.emotion-6[data-theme=dark] {
+  --badge-bg: rgba(226, 232, 240, 0.16);
+  --badge-color: var(--chakra-colors-gray-200);
+}
+
+<div>
+  <div
+    class="emotion-0"
+  >
+    <div
+      class="emotion-1"
+    >
+      <p
+        class="emotion-2"
+      >
+        테크 컴퍼니
+      </p>
+      <h3
+        class="emotion-3"
+      >
+        매우 긴 프로젝트 제목입니다. 이 프로젝트는 정말 긴 제목을 가지고 있어서 두 줄까지 표시가 되어야 하는 프로젝트입니다. 50자가 넘어가면 말줄임표시가 됩니다.
+      </h3>
+      <span
+        class="emotion-4"
+      >
+        2023.01
+         - 
+        2023.06
+      </span>
+      <div
+        class="chakra-stack emotion-5"
+      >
+        <span
+          class="emotion-6"
+        >
+          React
+        </span>
+        <span
+          class="emotion-6"
+        >
+          TypeScript
+        </span>
+        <span
+          class="emotion-6"
+        >
+          Next.js
+        </span>
+      </div>
+    </div>
+  </div>
+  <span
+    hidden=""
+    id="__chakra_env"
+  />
+</div>
+`;
