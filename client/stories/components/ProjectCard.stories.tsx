@@ -29,7 +29,9 @@ const mockProject = {
   startDate: '2023-01',
   endDate: '2023-06',
   keywords: ['React', 'TypeScript', 'Next.js', 'MSW'],
+  summary: '프로젝트 관리 시스템 개발',
   isPublic: true,
+  workExperienceId: '1',
 };
 
 export const Vertical: Story = {

@@ -14,6 +14,8 @@ const mockProject = {
   endDate: '2023-06',
   keywords: ['React', 'TypeScript', 'Next.js'],
   isPublic: true,
+  workExperienceId: '1',
+  summary: '프로젝트 관리 시스템 개발',
 };
 
 const formatDate = (date: string) => {
