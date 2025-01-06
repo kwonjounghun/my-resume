@@ -8,6 +8,7 @@ import { ResumeModule } from './resume/resume.module';
 import { CompanyModule } from './company/company.module';
 import { OpenAIService } from './common/services/openai.service';
 import { ProfileModule } from './profile/profile.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ProfileModule } from './profile/profile.module';
     ResumeModule,
     CompanyModule,
     ProfileModule,
+    ProjectModule,
   ],
   providers: [OpenAIService],
   exports: [OpenAIService],
