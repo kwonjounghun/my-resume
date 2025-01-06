@@ -5,7 +5,9 @@ export interface Project {
   startDate: string; // YYYY-MM
   endDate: string; // YYYY-MM
   keywords: string[];
+  summary: string;
   isPublic: boolean;
+  workExperienceId: string;
 }
 
 export const validateProjectTitle = (title: string): boolean => {
