@@ -3,11 +3,14 @@ import { ProjectList } from '@/widgets/ProjectList/ProjectList';
 import { useRouter } from 'next/router';
 import { BsGrid, BsListUl } from 'react-icons/bs';
 import { useState } from 'react';
+import { ProjectFilter } from '@/features/project/ui/ProjectFilter';
+import { useProjectFilter } from '@/features/project/hooks/useProjectFilter';
 
 export const ProjectsPage = () => {
   const router = useRouter();
   const [layout, setLayout] = useState<'horizontal' | 'vertical'>('vertical');
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const { filter, setFilter, resetFilter } = useProjectFilter();
 
   return (
     <Container maxW="container.xl" py={8}>
@@ -38,8 +41,17 @@ export const ProjectsPage = () => {
         </Flex>
       </Flex>
 
-      <Box>
-        <ProjectList layout={isMobile ? 'horizontal' : layout} />
+      <ProjectFilter
+        filter={filter}
+        onFilterChange={setFilter}
+        onReset={resetFilter}
+      />
+
+      <Box mt={4}>
+        <ProjectList
+          layout={isMobile ? 'horizontal' : layout}
+          filter={filter}
+        />
       </Box>
     </Container>
   );

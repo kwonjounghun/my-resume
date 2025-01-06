@@ -3,16 +3,24 @@ import { ProjectCard } from '@/shared/components/ProjectCard/ProjectCard';
 import { getProjects } from '@/shared/api/project';
 import { Box, SimpleGrid, Spinner, Text, VStack } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { ProjectFilterType } from '@/features/project/model/types';
 
 interface ProjectListProps {
   layout?: 'horizontal' | 'vertical';
+  filter?: ProjectFilterType;
 }
 
-export const ProjectList = ({ layout = 'vertical' }: ProjectListProps) => {
+export const ProjectList = ({ layout = 'vertical', filter }: ProjectListProps) => {
   const router = useRouter();
   const { data, isLoading, error } = useQuery({
-    queryKey: ['projects'],
-    queryFn: () => getProjects(),
+    queryKey: ['projects', filter],
+    queryFn: () => getProjects({
+      page: 1,
+      limit: 10,
+      keyword: filter?.searchQuery,
+      sortOrder: filter?.sortOrder,
+      searchField: filter?.searchField,
+    }),
   });
 
   if (isLoading) {

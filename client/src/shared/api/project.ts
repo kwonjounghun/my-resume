@@ -1,3 +1,5 @@
+import { SearchField } from '@/features/project/model/types';
+import { SortOrder } from '@/features/project/model/types';
 import { Project } from '../types/project';
 import { client } from './client';
 
@@ -5,6 +7,8 @@ export interface GetProjectsParams {
   page?: number;
   limit?: number;
   keyword?: string;
+  sortOrder?: SortOrder;
+  searchField?: SearchField;
 }
 
 export interface ProjectsResponse {
