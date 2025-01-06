@@ -6,7 +6,7 @@ const createJestConfig = nextJest({
 });
 
 const config: Config = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts', '<rootDir>/src/test/setup.ts'],
   testEnvironment: 'jest-environment-jsdom',
   snapshotSerializers: ['@emotion/jest/serializer'],
 };
