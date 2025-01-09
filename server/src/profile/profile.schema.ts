@@ -58,6 +58,9 @@ class Link {
 
 @Schema()
 export class Profile {
+  @Prop({ required: true })
+  userId: string;
+
   // 필수 필드
   @Prop({ required: true })
   name: string;

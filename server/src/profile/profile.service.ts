@@ -11,7 +11,7 @@ export class ProfileService {
   ) { }
 
   async create(userId: string, createProfileDto: CreateProfileDto): Promise<Profile> {
-    const existingProfile = await this.profileModel.findOne({ _id: userId });
+    const existingProfile = await this.profileModel.findOne({ userId });
     if (existingProfile) {
       throw new Error('Profile already exists for this user');
     }
@@ -24,7 +24,7 @@ export class ProfileService {
   }
 
   async findByUserId(userId: string): Promise<Profile> {
-    const profile = (await this.profileModel.findOne({ _id: userId }));
+    const profile = await this.profileModel.findOne({ userId });
     if (!profile) {
       throw new NotFoundException('Profile not found');
     }
@@ -35,7 +35,7 @@ export class ProfileService {
 
   async update(userId: string, updateProfileDto: UpdateProfileDto): Promise<Profile> {
     const profile = await this.profileModel.findOneAndUpdate(
-      { _id: userId },
+      { userId },
       { $set: updateProfileDto },
     );
 
@@ -47,7 +47,7 @@ export class ProfileService {
   }
 
   async delete(userId: string): Promise<void> {
-    const result = await this.profileModel.deleteOne({ _id: userId });
+    const result = await this.profileModel.deleteOne({ userId });
     if (result.deletedCount === 0) {
       throw new NotFoundException('Profile not found');
     }
