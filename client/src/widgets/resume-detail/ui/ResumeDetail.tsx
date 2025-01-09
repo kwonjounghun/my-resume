@@ -247,13 +247,11 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
                   <Text fontWeight="bold" color="gray.600" mb={2}>기술</Text>
                 </GridItem>
                 <GridItem>
-                  <VStack align="stretch" spacing={2}>
-                    {profile?.profile.skills.map((skill, index) => (
-                      <HStack key={index} justify="space-between">
-                        <Tag colorScheme="gray" >{skill.name} (LV.{skill.level})</Tag>
-                      </HStack>
+                  <HStack align="stretch" spacing={2}>
+                    {profile?.profile.skills.map((skill) => (
+                      <Tag colorScheme="gray" key={skill.name}>{skill.name} (LV.{skill.level})</Tag>
                     ))}
-                  </VStack>
+                  </HStack>
                 </GridItem>
               </Grid>
             </>
