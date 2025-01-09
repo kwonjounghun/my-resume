@@ -4,8 +4,7 @@ import { Profile } from '@/entities/profile/model/types';
 const STORAGE_KEY = 'mock_profile';
 
 const mockProfile: Profile = {
-  id: 1,
-  userId: 1,
+  id: '1',
   name: '홍길동',
   email: 'hong@example.com',
   phone: '010-1234-5678',

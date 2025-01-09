@@ -210,32 +210,34 @@ export const ProjectDetailPage = ({ projectId }: ProjectDetailPageProps) => {
         </HStack>
       </VStack>
 
-      <AlertDialog
-        isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              프로젝트 삭제
-            </AlertDialogHeader>
+      {cancelRef.current !== null && (
+        <AlertDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          leastDestructiveRef={cancelRef as React.RefObject<HTMLButtonElement>}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                프로젝트 삭제
+              </AlertDialogHeader>
 
-            <AlertDialogBody>
-              정말로 이 프로젝트를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
-            </AlertDialogBody>
+              <AlertDialogBody>
+                정말로 이 프로젝트를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+              </AlertDialogBody>
 
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                취소
-              </Button>
-              <Button colorScheme="red" onClick={handleDelete} ml={3} isLoading={isDeleting}>
-                삭제
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+              <AlertDialogFooter>
+                <Button ref={cancelRef} onClick={onClose}>
+                  취소
+                </Button>
+                <Button colorScheme="red" onClick={handleDelete} ml={3} isLoading={isDeleting}>
+                  삭제
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
+      )}
     </Container>
   );
 }; 

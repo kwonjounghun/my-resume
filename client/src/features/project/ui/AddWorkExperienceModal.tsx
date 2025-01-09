@@ -16,12 +16,12 @@ import {
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createWorkExperience } from '@/entities/workExperiences/api';
-import { CreateWorkExperience } from '@/entities/workExperiences/model';
+import { CreateWorkExperience, WorkExperience } from '@/entities/workExperiences/model';
 
 interface AddWorkExperienceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess?: (workExperience: any) => void;
+  onSuccess?: (workExperience: WorkExperience) => void;
 }
 
 export const AddWorkExperienceModal = ({

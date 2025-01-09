@@ -9,16 +9,12 @@ export const getThemeValue = <T extends keyof Theme, K extends keyof Theme[T]>(
   return theme[tokenType][key];
 };
 
+type ColorPath = `neutral.${(keyof Theme['colors']['neutral'])}` | `system.${(keyof Theme['colors']['system'])}` | `primary.${(keyof Theme['colors']['primary'])}` | `secondary.${(keyof Theme['colors']['secondary'])}` | `text.${(keyof Theme['colors']['text'])}`;
+
 // 색상 값을 가져오는 유틸리티
-export const getColor = (theme: Theme, colorPath: string) => {
-  const paths = colorPath.split('.');
-  let current: any = theme.colors;
-
-  for (const path of paths) {
-    current = current[path];
-  }
-
-  return current;
+export const getColor = (theme: Theme, colorPath: ColorPath) => {
+  const [namespace, color] = colorPath.split('.') as [keyof Theme['colors'], keyof Theme['colors'][keyof Theme['colors']]];
+  return theme.colors[namespace][color];
 };
 
 // 타이포그래피 스타일을 가져오는 유틸리티

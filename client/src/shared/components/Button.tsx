@@ -3,11 +3,7 @@ import { theme } from '../styles/tokens';
 import { getColor, getTypography } from '../styles/utils/theme';
 import { ButtonHTMLAttributes } from 'react';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  // 추가적인 커스텀 props가 필요하다면 여기에 정의
-}
-
-export const Button = styled.button<ButtonProps>`
+export const Button = styled.button<ButtonHTMLAttributes<HTMLButtonElement>>`
   background-color: ${() => getColor(theme, 'primary.main')};
   color: ${() => getColor(theme, 'primary.contrast')};
   padding: ${theme.spacing[2]} ${theme.spacing[4]};

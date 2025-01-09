@@ -17,7 +17,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { Project, UpdateProjectDto } from '@/shared/api/project';
 import { WorkExperience } from '@/shared/api/work-experience';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface ProjectEditFormProps {
   project: Project;

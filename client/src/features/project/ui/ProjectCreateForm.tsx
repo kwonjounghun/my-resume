@@ -9,8 +9,6 @@ import { ProjectTaskStep } from './steps/ProjectTaskStep';
 import { ProjectActionStep } from './steps/ProjectActionStep';
 import { ProjectResultStep } from './steps/ProjectResultStep';
 
-interface ProjectFormData extends CreateProjectDto { }
-
 interface ProjectCreateFormProps {
   activeStep: number;
   onNext: () => void;
@@ -25,7 +23,7 @@ export const ProjectCreateForm = ({
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
-  const methods = useForm<ProjectFormData>({
+  const methods = useForm<CreateProjectDto>({
     defaultValues: {
       isPublic: true,
     },
@@ -46,7 +44,7 @@ export const ProjectCreateForm = ({
       });
       router.push(`/projects/${project.id}`);
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: '오류',
         description: '프로젝트 생성에 실패했습니다. 다시 시도해주세요.',
@@ -57,7 +55,7 @@ export const ProjectCreateForm = ({
     },
   });
 
-  const onSubmit = (data: ProjectFormData) => {
+  const onSubmit = (data: CreateProjectDto) => {
     mutate(data);
   };
 

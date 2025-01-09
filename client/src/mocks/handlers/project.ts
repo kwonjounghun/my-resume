@@ -12,6 +12,8 @@ const mockProjects: Project[] = [
     isPublic: true,
     summary: '프로젝트 관리 시스템 개발',
     workExperienceId: 'work-1',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '2',
@@ -23,6 +25,8 @@ const mockProjects: Project[] = [
     isPublic: true,
     summary: '이력서 빌더 서비스',
     workExperienceId: 'work-2',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
@@ -38,7 +42,7 @@ export const projectHandlers = [
     if (keyword) {
       filteredProjects = filteredProjects.filter(project =>
         project.title.toLowerCase().includes(keyword.toLowerCase()) ||
-        project.keywords.some(tag => tag.toLowerCase().includes(keyword.toLowerCase()))
+        project.keywords?.some(tag => tag.toLowerCase().includes(keyword.toLowerCase()))
       );
     }
 
