@@ -7,6 +7,7 @@ export interface Project {
   keywords: string[];
   situation: string;
   task: string;
+  summary: string;
   action: string;
   result: string;
   isPublic: boolean;

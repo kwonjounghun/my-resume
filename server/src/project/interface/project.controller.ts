@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { GetProjectsUseCase } from '../application/get-projects.usecase';
 import { GetProjectUseCase } from '../application/get-project.usecase';
 import { CreateProjectUseCase } from '../application/create-project.usecase';
+import { UpdateProjectUseCase } from '../application/update-project.usecase';
 import { SummarizeProjectUseCase } from '../application/summarize-project.usecase';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { CreateProjectDto } from './dto/create-project.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @ApiTags('projects')
 @Controller('projects')
@@ -16,6 +18,7 @@ export class ProjectController {
     private getProjectsUseCase: GetProjectsUseCase,
     private getProjectUseCase: GetProjectUseCase,
     private createProjectUseCase: CreateProjectUseCase,
+    private updateProjectUseCase: UpdateProjectUseCase,
     private summarizeProjectUseCase: SummarizeProjectUseCase,
   ) { }
 
@@ -74,6 +77,22 @@ export class ProjectController {
     @CurrentUser() userId: string,
   ) {
     return this.getProjectUseCase.execute(id, userId);
+  }
+
+  @Patch(':id')
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    transform: true,
+    forbidNonWhitelisted: false
+  }))
+  @ApiOperation({ summary: '프로젝트 수정' })
+  @ApiResponse({ status: 200, description: '프로젝트가 성공적으로 수정되었습니다.' })
+  async updateProject(
+    @Param('id') id: string,
+    @Body() updateProjectDto: UpdateProjectDto,
+    @CurrentUser() userId: string,
+  ) {
+    return this.updateProjectUseCase.execute(id, userId, updateProjectDto);
   }
 
   @Post(':id/summarize')
