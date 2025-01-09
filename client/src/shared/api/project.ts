@@ -21,6 +21,7 @@ export interface Project {
   id: string;
   title: string;
   workExperienceId: string;
+  companyName: string;
   startDate: string;
   endDate: string;
   situation?: string;

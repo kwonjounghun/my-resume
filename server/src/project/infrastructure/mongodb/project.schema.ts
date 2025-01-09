@@ -9,6 +9,18 @@ export class ProjectDocument extends Document {
   @Prop({ required: true })
   title: string;
 
+  @Prop({ required: true })
+  workExperienceId: string;
+
+  @Prop({ required: true })
+  companyName: string;
+
+  @Prop({ required: true })
+  startDate: string;
+
+  @Prop({ required: true })
+  endDate: string;
+
   @Prop()
   situation?: string;
 
@@ -21,23 +33,14 @@ export class ProjectDocument extends Document {
   @Prop()
   result?: string;
 
-  @Prop({ required: true })
-  isPublic: boolean;
-
-  @Prop([String])
-  keywords?: string[];
-
   @Prop()
   summary?: string;
 
-  @Prop({ required: true })
-  workExperienceId: string;
+  @Prop({ type: [String], default: [] })
+  keywords: string[];
 
-  @Prop({ required: true })
-  startDate: string;
-
-  @Prop({ required: true })
-  endDate: string;
+  @Prop({ default: false })
+  isPublic: boolean;
 
   @Prop()
   createdAt: Date;

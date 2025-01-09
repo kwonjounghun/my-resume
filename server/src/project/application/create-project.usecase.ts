@@ -1,20 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { PROJECT_REPOSITORY } from '../domain/project.repository';
 import { ProjectRepository } from '../domain/project.repository';
-import { Project } from '../domain/project.entity';
-
-interface CreateProjectParams {
-  userId: string;
-  title: string;
-  workExperienceId: string;
-  startDate: string;
-  endDate: string;
-  situation?: string;
-  task?: string;
-  action?: string;
-  result?: string;
-  isPublic: boolean;
-}
+import { CreateProjectDto } from '../interface/dto/create-project.dto';
 
 @Injectable()
 export class CreateProjectUseCase {
@@ -23,13 +10,12 @@ export class CreateProjectUseCase {
     private projectRepository: ProjectRepository,
   ) { }
 
-  async execute(params: CreateProjectParams): Promise<Project> {
-    const project = new Project({
-      ...params,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+  async execute(params: CreateProjectDto & { userId: string }) {
+
+    const project = await this.projectRepository.create({
+      ...params
     });
 
-    return this.projectRepository.create(project);
+    return project;
   }
 } 

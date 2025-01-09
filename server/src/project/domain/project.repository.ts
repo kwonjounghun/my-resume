@@ -1,3 +1,4 @@
+import { ProjectDocument } from '../infrastructure/mongodb/project.schema';
 import { Project } from './project.entity';
 
 export const PROJECT_REPOSITORY = 'PROJECT_REPOSITORY';

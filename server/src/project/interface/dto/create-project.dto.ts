@@ -7,6 +7,11 @@ export class CreateProjectDto {
   @IsNotEmpty()
   title: string;
 
+  @ApiProperty({ description: '회사 이름' })
+  @IsString()
+  @IsNotEmpty()
+  companyName: string;
+
   @ApiProperty({ description: '회사 ID' })
   @IsString()
   @IsNotEmpty()

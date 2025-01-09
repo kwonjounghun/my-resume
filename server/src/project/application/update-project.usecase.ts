@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { PROJECT_REPOSITORY } from '../domain/project.repository';
 import { ProjectRepository } from '../domain/project.repository';
 import { UpdateProjectDto } from '../interface/dto/update-project.dto';
@@ -18,7 +18,10 @@ export class UpdateProjectUseCase {
     }
 
     // 프로젝트 업데이트
-    const updated = await this.projectRepository.update(id, updateProjectDto, userId);
+    const updated = await this.projectRepository.update(id, {
+      ...updateProjectDto,
+    }, userId);
+
     return updated;
   }
 } 

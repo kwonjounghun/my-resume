@@ -61,6 +61,7 @@ export class ProjectController {
       sortOrder,
     });
 
+
     return {
       projects: result.projects,
       total: result.total,

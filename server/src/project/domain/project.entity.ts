@@ -1,20 +1,20 @@
 export class Project {
-  id: string;
+  id?: string;
+  userId: string;
   title: string;
+  workExperienceId: string;
+  companyName: string;
+  startDate: string;
+  endDate: string;
   situation?: string;
   task?: string;
   action?: string;
   result?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  isPublic: boolean;
-  keywords?: string[];
   summary?: string;
-  workExperienceId: string;
-  startDate: string; // YYYY-MM
-  endDate: string; // YYYY-MM
+  keywords?: string[];
+  isPublic: boolean;
 
-  constructor(params: Partial<Project>) {
-    Object.assign(this, params);
+  constructor(partial: Partial<Project>) {
+    Object.assign(this, partial);
   }
 } 

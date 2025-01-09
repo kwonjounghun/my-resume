@@ -45,6 +45,7 @@ export const ProjectEditForm = ({
       situation: project.situation,
       task: project.task,
       action: project.action,
+      summary: project.summary,
       result: project.result,
       isPublic: project.isPublic,
       workExperienceId: project.workExperienceId,
