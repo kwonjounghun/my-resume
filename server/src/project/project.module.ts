@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProjectDocument, ProjectSchema } from './infrastructure/mongodb/project.schema';
 import { ProjectRepositoryImpl } from './infrastructure/mongodb/project.repository.impl';
 import { GetProjectsUseCase } from './application/get-projects.usecase';
+import { GetProjectUseCase } from './application/get-project.usecase';
 import { CreateProjectUseCase } from './application/create-project.usecase';
 import { ProjectController } from './interface/project.controller';
 import { PROJECT_REPOSITORY } from './domain/project.repository';
@@ -19,6 +20,7 @@ import { PROJECT_REPOSITORY } from './domain/project.repository';
       useClass: ProjectRepositoryImpl,
     },
     GetProjectsUseCase,
+    GetProjectUseCase,
     CreateProjectUseCase,
   ],
   controllers: [ProjectController],

@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { GetProjectsUseCase } from '../application/get-projects.usecase';
+import { GetProjectUseCase } from '../application/get-project.usecase';
 import { CreateProjectUseCase } from '../application/create-project.usecase';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
@@ -12,6 +13,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 export class ProjectController {
   constructor(
     private getProjectsUseCase: GetProjectsUseCase,
+    private getProjectUseCase: GetProjectUseCase,
     private createProjectUseCase: CreateProjectUseCase,
   ) { }
 
@@ -60,5 +62,15 @@ export class ProjectController {
       page: page || 1,
       limit: limit || 10,
     };
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: '프로젝트 상세 조회' })
+  @ApiResponse({ status: 200, description: '프로젝트를 성공적으로 조회했습니다.' })
+  async getProject(
+    @Param('id') id: string,
+    @CurrentUser() userId: string,
+  ) {
+    return this.getProjectUseCase.execute(id, userId);
   }
 } 

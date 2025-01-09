@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ProjectDocument } from './project.schema';
@@ -57,5 +57,15 @@ export class ProjectRepositoryImpl implements ProjectRepository {
       projects: projects.map(project => new Project(project)),
       total,
     };
+  }
+
+  async findById(id: string, userId: string): Promise<Project> {
+    const project = await this.projectModel.findOne({ _id: id, userId }).lean();
+
+    if (!project) {
+      throw new NotFoundException('프로젝트를 찾을 수 없습니다.');
+    }
+
+    return new Project({ ...project, id: project._id.toString() });
   }
 } 
