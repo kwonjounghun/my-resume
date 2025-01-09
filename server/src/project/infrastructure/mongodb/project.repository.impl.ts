@@ -12,6 +12,11 @@ export class ProjectRepositoryImpl implements ProjectRepository {
     private projectModel: Model<ProjectDocument>,
   ) { }
 
+  async create(project: Project): Promise<Project> {
+    const created = await this.projectModel.create(project);
+    return new Project({ ...created.toObject(), id: created._id.toString() });
+  }
+
   async findAll(params: {
     userId: string;
     page?: number;

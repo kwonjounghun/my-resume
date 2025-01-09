@@ -1,22 +1,15 @@
-import { Box, Button, ButtonGroup } from '@chakra-ui/react';
+import { Box, Button, ButtonGroup, useToast } from '@chakra-ui/react';
 import { useForm, FormProvider } from 'react-hook-form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { projectApi, CreateProjectDto } from '@/shared/api/project';
 import { ProjectBasicInfoStep } from './steps/ProjectBasicInfoStep';
 import { ProjectSituationStep } from './steps/ProjectSituationStep';
 import { ProjectTaskStep } from './steps/ProjectTaskStep';
 import { ProjectActionStep } from './steps/ProjectActionStep';
 import { ProjectResultStep } from './steps/ProjectResultStep';
 
-interface ProjectFormData {
-  title: string;
-  workExperienceId: string;
-  startDate: string;
-  endDate: string;
-  situation?: string;
-  task?: string;
-  action?: string;
-  result?: string;
-  isPublic: boolean;
-}
+interface ProjectFormData extends CreateProjectDto { }
 
 interface ProjectCreateFormProps {
   activeStep: number;
@@ -29,6 +22,9 @@ export const ProjectCreateForm = ({
   onNext,
   onPrev,
 }: ProjectCreateFormProps) => {
+  const router = useRouter();
+  const toast = useToast();
+  const queryClient = useQueryClient();
   const methods = useForm<ProjectFormData>({
     defaultValues: {
       isPublic: true,
@@ -37,9 +33,40 @@ export const ProjectCreateForm = ({
 
   const { handleSubmit } = methods;
 
+  const { mutate, isPending } = useMutation({
+    mutationFn: projectApi.create,
+    onSuccess: async (project) => {
+      await queryClient.invalidateQueries({ queryKey: ['projects'] });
+      toast({
+        title: '성공',
+        description: '프로젝트가 성공적으로 생성되었습니다.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      router.push(`/projects/${project.id}`);
+    },
+    onError: (error) => {
+      toast({
+        title: '오류',
+        description: '프로젝트 생성에 실패했습니다. 다시 시도해주세요.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
   const onSubmit = (data: ProjectFormData) => {
-    console.log(data);
-    // TODO: API 호출
+    mutate(data);
+  };
+
+  const handleNext = () => {
+    methods.trigger().then((isValid) => {
+      if (isValid) {
+        onNext();
+      }
+    });
   };
 
   const renderStep = () => {
@@ -70,11 +97,11 @@ export const ProjectCreateForm = ({
             </Button>
           )}
           {activeStep === 4 ? (
-            <Button colorScheme="blue" type="submit">
+            <Button colorScheme="blue" type="submit" isLoading={isPending}>
               완료
             </Button>
           ) : (
-            <Button colorScheme="blue" onClick={onNext}>
+            <Button colorScheme="blue" onClick={handleNext}>
               다음
             </Button>
           )}

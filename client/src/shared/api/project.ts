@@ -25,4 +25,22 @@ export const getProjects = async (params: GetProjectsParams = {}): Promise<Proje
   if (params.keyword) searchParams.append('keyword', params.keyword);
 
   return client.get(`/projects?${searchParams.toString()}`)
+};
+
+export interface CreateProjectDto {
+  title: string;
+  workExperienceId: string;
+  startDate: string;
+  endDate: string;
+  situation?: string;
+  task?: string;
+  action?: string;
+  result?: string;
+  isPublic: boolean;
+}
+
+export const projectApi = {
+  create: (data: CreateProjectDto) => {
+    return client.post<Project>('/projects', data);
+  },
 }; 
