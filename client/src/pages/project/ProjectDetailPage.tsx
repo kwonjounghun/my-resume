@@ -10,11 +10,19 @@ import {
   Skeleton,
   Button,
   useToast,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { projectApi } from '@/shared/api/project';
 import { workExperienceApi, WorkExperience } from '@/shared/api/work-experience';
+import { useRef } from 'react';
 
 interface ProjectDetailPageProps {
   projectId: string;
@@ -24,6 +32,8 @@ export const ProjectDetailPage = ({ projectId }: ProjectDetailPageProps) => {
   const router = useRouter();
   const toast = useToast();
   const queryClient = useQueryClient();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement>(null);
 
   const { data: project, isLoading: isLoadingProject } = useQuery({
     queryKey: ['project', projectId],
@@ -58,6 +68,35 @@ export const ProjectDetailPage = ({ projectId }: ProjectDetailPageProps) => {
       });
     },
   });
+
+  const { mutate: deleteProject, isPending: isDeleting } = useMutation({
+    mutationFn: () => projectApi.delete(projectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      toast({
+        title: '성공',
+        description: '프로젝트가 성공적으로 삭제되었습니다.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      router.push('/projects');
+    },
+    onError: () => {
+      toast({
+        title: '오류',
+        description: '프로젝트 삭제에 실패했습니다. 다시 시도해주세요.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const handleDelete = () => {
+    deleteProject();
+    onClose();
+  };
 
   const workExperience = workExperiences?.workExperiences.find(
     (we: WorkExperience) => we.id === project?.workExperienceId
@@ -165,8 +204,38 @@ export const ProjectDetailPage = ({ projectId }: ProjectDetailPageProps) => {
           <Button colorScheme="blue" onClick={() => router.push(`/projects/${projectId}/edit`)}>
             수정
           </Button>
+          <Button colorScheme="red" onClick={onOpen}>
+            삭제
+          </Button>
         </HStack>
       </VStack>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              프로젝트 삭제
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              정말로 이 프로젝트를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                취소
+              </Button>
+              <Button colorScheme="red" onClick={handleDelete} ml={3} isLoading={isDeleting}>
+                삭제
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Container>
   );
 }; 

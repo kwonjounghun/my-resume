@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { GetProjectsUseCase } from '../application/get-projects.usecase';
 import { GetProjectUseCase } from '../application/get-project.usecase';
 import { CreateProjectUseCase } from '../application/create-project.usecase';
 import { UpdateProjectUseCase } from '../application/update-project.usecase';
+import { DeleteProjectUseCase } from '../application/delete-project.usecase';
 import { SummarizeProjectUseCase } from '../application/summarize-project.usecase';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
@@ -19,6 +20,7 @@ export class ProjectController {
     private getProjectUseCase: GetProjectUseCase,
     private createProjectUseCase: CreateProjectUseCase,
     private updateProjectUseCase: UpdateProjectUseCase,
+    private deleteProjectUseCase: DeleteProjectUseCase,
     private summarizeProjectUseCase: SummarizeProjectUseCase,
   ) { }
 
@@ -104,5 +106,15 @@ export class ProjectController {
     @CurrentUser() userId: string,
   ) {
     return this.summarizeProjectUseCase.execute(id, userId);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: '프로젝트 삭제' })
+  @ApiResponse({ status: 200, description: '프로젝트가 성공적으로 삭제되었습니다.' })
+  async deleteProject(
+    @Param('id') id: string,
+    @CurrentUser() userId: string,
+  ): Promise<void> {
+    await this.deleteProjectUseCase.execute(id, userId);
   }
 } 

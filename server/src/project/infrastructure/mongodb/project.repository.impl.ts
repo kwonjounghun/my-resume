@@ -41,6 +41,13 @@ export class ProjectRepositoryImpl implements ProjectRepository {
     return updated ? this.toEntity(updated) : null;
   }
 
+  async delete(id: string, userId: string): Promise<Project> {
+    const deleted = await this.projectModel
+      .findOneAndDelete({ _id: id, userId })
+      .exec();
+    return deleted ? this.toEntity(deleted) : null;
+  }
+
   async findAll(params: {
     userId: string;
     page?: number;

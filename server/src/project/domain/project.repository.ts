@@ -7,6 +7,7 @@ export interface ProjectRepository {
   create(project: Project): Promise<Project>;
   findById(id: string, userId: string): Promise<Project>;
   update(id: string, project: Partial<Project>, userId: string): Promise<Project>;
+  delete(id: string, userId: string): Promise<Project>;
   findAll(params: {
     userId: string;
     page?: number;

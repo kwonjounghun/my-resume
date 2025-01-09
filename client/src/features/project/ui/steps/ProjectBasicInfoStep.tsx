@@ -59,6 +59,11 @@ export const ProjectBasicInfoStep = () => {
             required: '회사를 선택해주세요',
           })}
           placeholder="회사를 선택하세요"
+          onChange={(e) => {
+            const value = e.target.value;
+            setValue('workExperienceId', value);
+            setValue('companyName', workExperienceData?.workExperiences.find(we => we.id === value)?.company || '');
+          }}
         >
           {workExperienceData?.workExperiences.map((we) => (
             <option key={we.id} value={we.id}>

@@ -40,6 +40,7 @@ export interface CreateProjectDto {
   workExperienceId: string;
   startDate: string;
   endDate: string;
+  companyName: string;
   situation?: string;
   summary?: string;
   task?: string;
@@ -77,6 +78,9 @@ export const projectApi = {
   },
   update: (id: string, data: UpdateProjectDto) => {
     return client.patch<Project>(`/projects/${id}`, data);
+  },
+  delete: (id: string) => {
+    return client.delete(`/projects/${id}`);
   },
   summarize: (id: string) => {
     return client.post<Project>(`/projects/${id}/summarize`);
