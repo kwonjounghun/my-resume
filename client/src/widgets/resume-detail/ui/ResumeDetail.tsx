@@ -16,7 +16,7 @@ import Link from 'next/link';
 import { FiArrowLeft, FiEdit2 } from 'react-icons/fi';
 import { getResume } from '@/entities/resume/api/getResume';
 import { getIntroduction } from '@/entities/introduction/api/getIntroduction';
-import { getRetrospective } from '@/entities/retrospective/api/getRetrospective';
+import { projectApi } from '@/shared/api/project';
 import { useProfile } from '@/entities/profile/model/hooks/useProfile';
 
 interface ResumeDetailProps {
@@ -37,11 +37,11 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
 
   const { data: profile, isLoading: isProfileLoading } = useProfile();
 
-  const { data: retrospectives } = useQuery({
-    queryKey: ['retrospectives', resume?.projects],
+  const { data: projects } = useQuery({
+    queryKey: ['projects', resume?.projects],
     queryFn: async () => {
       const promises = resume!.projects.map((projectId) =>
-        getRetrospective(projectId)
+        projectApi.getById(projectId)
       );
       return Promise.all(promises);
     },
@@ -150,29 +150,29 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
             </Stack>
           )}
 
-          {retrospectives && retrospectives.length > 0 && (
+          {projects && projects.length > 0 && (
             <Stack spacing={3}>
               <Heading as="h2" size="md">
                 프로젝트 경험
               </Heading>
               <Stack spacing={4}>
-                {retrospectives.map((retro) => (
-                  <Card key={retro.id} variant="outline">
+                {projects.map((project) => (
+                  <Card key={project.id} variant="outline">
                     <CardBody>
                       <VStack align="stretch" spacing={3}>
                         <Stack>
                           <Heading as="h3" size="sm">
-                            {retro.title}
+                            {project.title}
                           </Heading>
                           <Text fontSize="sm" color="gray.600">
-                            {new Date(retro.startDate).toLocaleDateString()} -{' '}
-                            {new Date(retro.endDate).toLocaleDateString()}
+                            {new Date(project.startDate).toLocaleDateString()} -{' '}
+                            {new Date(project.endDate).toLocaleDateString()}
                           </Text>
                         </Stack>
-                        <Text>{retro.summary}</Text>
-                        {retro.keywords && retro.keywords.length > 0 && (
+                        <Text>{project.summary}</Text>
+                        {project.keywords && project.keywords.length > 0 && (
                           <HStack spacing={2}>
-                            {retro.keywords.map((keyword) => (
+                            {project.keywords.map((keyword) => (
                               <Badge
                                 key={keyword}
                                 colorScheme="primary"
@@ -190,6 +190,89 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
               </Stack>
             </Stack>
           )}
+
+          {profile?.profile.skills && profile?.profile.skills.length > 0 && (
+            <Box>
+              <Text fontWeight="bold" color="gray.600" mb={2}>기술</Text>
+              <VStack align="stretch" spacing={2}>
+                {profile?.profile.skills.map((skill, index) => (
+                  <HStack key={index} justify="space-between">
+                    <Text fontWeight="medium">{skill.name}</Text>
+                    <Badge colorScheme="green">{skill.level}</Badge>
+                  </HStack>
+                ))}
+              </VStack>
+            </Box>
+          )}
+
+          {profile?.profile?.education && profile?.profile?.education.length > 0 && (
+            <Box>
+              <Text fontWeight="bold" color="gray.600" mb={2}>학력</Text>
+              <VStack align="stretch" spacing={2}>
+                {profile?.profile?.education.map((education, index) => (
+                  <Box key={index}>
+                    <Text fontWeight="medium">{education.schoolName}</Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {education.major} ({education.startDate} - {education.isAttending ? '재학중' : education.endDate})
+                    </Text>
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
+          )}
+
+          {profile?.profile?.awards && profile?.profile?.awards.length > 0 && (
+            <Box>
+              <Text fontWeight="bold" color="gray.600" mb={2}>수상</Text>
+              <VStack align="stretch" spacing={2}>
+                {profile?.profile?.awards.map((award, index) => (
+                  <Box key={index}>
+                    <Text fontWeight="medium">{award.title}</Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {award.date}
+                    </Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {award.description}
+                    </Text>
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
+          )}
+
+          {profile?.profile?.languages && profile?.profile?.languages.length > 0 && (
+            <Box>
+              <Text fontWeight="bold" color="gray.600" mb={2}>자격증</Text>
+              <VStack align="stretch" spacing={2}>
+                {profile?.profile?.languages.map((language, index) => (
+                  <Box key={index}>
+                    <Text fontWeight="medium">{language.name}</Text>
+                    <Text fontSize="sm" color="gray.600">
+                      {language.certifications.map((certification) => certification.date).join(', ')}
+                    </Text>
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
+          )}
+
+          {profile?.profile?.links && profile?.profile?.links.length > 0 && (
+            <Box>
+              <Text fontWeight="bold" color="gray.600" mb={2}>링크</Text>
+              <VStack align="stretch" spacing={2}>
+                {profile?.profile?.links.map((link, index) => (
+                  <HStack key={index}>
+                    <Badge colorScheme="blue">{link.type}</Badge>
+                    <Link href={link.url} color="blue.500">
+                      {link.description || link.url}
+                    </Link>
+                  </HStack>
+                ))}
+              </VStack>
+            </Box>
+          )}
+
+
 
           <Stack spacing={3}>
             <Heading as="h2" size="md">
