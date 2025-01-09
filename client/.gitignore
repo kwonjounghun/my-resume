@@ -44,3 +44,9 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# storybook-static/
+storybook-static/
+
+# .storybook/static/
+.storybook/static/

@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import { TextEncoder, TextDecoder } from 'util';
+import { matchers } from '@emotion/jest';
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;
@@ -26,3 +27,5 @@ class BroadcastChannelMock {
 }
 
 global.BroadcastChannel = BroadcastChannelMock as any;
+
+expect.extend(matchers);

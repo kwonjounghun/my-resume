@@ -1,18 +1,18 @@
 import { Stack, Text, Card, Button, Flex, IconButton } from '@chakra-ui/react';
 import { FiX } from 'react-icons/fi';
-import { Retrospective } from '@/entities/retrospective/model/types';
+import { Project } from '@/shared/types/project';
 
-interface SelectedRetrospectiveListProps {
-  retrospectives: Retrospective[];
+interface SelectedProjectListProps {
+  projects: Project[];
   onRemove: (id: string) => void;
   onAdd: () => void;
 }
 
-export function SelectedRetrospectiveList({
-  retrospectives,
+export function SelectedProjectList({
+  projects,
   onRemove,
   onAdd,
-}: SelectedRetrospectiveListProps) {
+}: SelectedProjectListProps) {
   return (
     <Stack spacing={4}>
       <Flex justify="space-between" align="center">
@@ -22,13 +22,13 @@ export function SelectedRetrospectiveList({
         </Button>
       </Flex>
       <Stack spacing={2}>
-        {retrospectives.map((retro) => (
-          <Card key={retro.id} p={4}>
+        {projects.map((project) => (
+          <Card key={project.id} p={4}>
             <Flex justify="space-between" align="center">
               <Stack spacing={0}>
-                <Text fontWeight="medium">{retro.title}</Text>
+                <Text fontWeight="medium">{project.title}</Text>
                 <Text fontSize="sm" color="gray.600">
-                  {retro.company}
+                  {project.companyName}
                 </Text>
               </Stack>
               <IconButton
@@ -36,12 +36,12 @@ export function SelectedRetrospectiveList({
                 icon={<FiX />}
                 variant="ghost"
                 size="sm"
-                onClick={() => onRemove(retro.id)}
+                onClick={() => onRemove(project.id)}
               />
             </Flex>
           </Card>
         ))}
-        {retrospectives.length === 0 && (
+        {projects.length === 0 && (
           <Text color="gray.500">선택된 회고가 없습니다.</Text>
         )}
       </Stack>

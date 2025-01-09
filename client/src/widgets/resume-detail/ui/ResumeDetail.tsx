@@ -10,13 +10,18 @@ import {
   Badge,
   HStack,
   VStack,
+  Grid,
+  GridItem,
+  Tag,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { FiArrowLeft, FiEdit2 } from 'react-icons/fi';
 import { getResume } from '@/entities/resume/api/getResume';
 import { getIntroduction } from '@/entities/introduction/api/getIntroduction';
-import { getRetrospective } from '@/entities/retrospective/api/getRetrospective';
+import { projectApi } from '@/shared/api/project';
+import { useProfile } from '@/entities/profile/model/hooks/useProfile';
+import { Project } from '@/shared/api/project';
 
 interface ResumeDetailProps {
   id: string;
@@ -34,18 +39,54 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
     enabled: !!resume?.selfIntroductionId,
   });
 
-  const { data: retrospectives } = useQuery({
-    queryKey: ['retrospectives', resume?.projects],
+  const { data: profile, isLoading: isProfileLoading } = useProfile();
+
+  const { data: projects } = useQuery({
+    queryKey: ['projects', resume?.projects],
     queryFn: async () => {
       const promises = resume!.projects.map((projectId) =>
-        getRetrospective(projectId)
+        projectApi.getById(projectId)
       );
       return Promise.all(promises);
     },
     enabled: !!resume?.projects.length,
   });
 
-  if (isResumeLoading) {
+  // 회사별로 프로젝트 그룹화 및 정렬
+  const groupedProjects = projects?.reduce((acc, project) => {
+    const company = project.companyName;
+    const existingGroup = acc.find(group => group.company === company);
+
+    if (existingGroup) {
+      existingGroup.projects.push(project);
+    } else {
+      acc.push({
+        company,
+        projects: [project],
+        startDate: new Date(project.startDate),
+        endDate: new Date(project.endDate),
+      });
+    }
+    return acc;
+  }, [] as Array<{
+    company: string;
+    projects: Project[];
+    startDate: Date;
+    endDate: Date;
+  }>)?.map(group => ({
+    ...group,
+    // 각 그룹 내에서 프로젝트들을 최신순으로 정렬
+    projects: group.projects.sort((a, b) =>
+      new Date(b.endDate).getTime() - new Date(a.endDate).getTime()
+    ),
+    // 그룹의 시작일과 종료일 업데이트
+    startDate: new Date(Math.min(...group.projects.map(p => new Date(p.startDate).getTime()))),
+    endDate: new Date(Math.max(...group.projects.map(p => new Date(p.endDate).getTime()))),
+  }))
+    // 회사별 그룹을 최신순으로 정렬
+    ?.sort((a, b) => b.endDate.getTime() - a.endDate.getTime());
+
+  if (isResumeLoading && isProfileLoading) {
     return null;
   }
 
@@ -109,69 +150,213 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
 
           <Divider />
 
+          <Box>
+            <Text fontSize="xl" fontWeight="bold" mb={4}>
+              기본 정보
+            </Text>
+            <Stack spacing={4}>
+              <HStack>
+                <Text fontWeight="bold" minW="100px">이름</Text>
+                <Text>{profile?.profile.name}</Text>
+              </HStack>
+              <HStack>
+                <Text fontWeight="bold" minW="100px">이메일</Text>
+                <Text>{profile?.profile.email}</Text>
+              </HStack>
+              <HStack>
+                <Text fontWeight="bold" minW="100px">연락처</Text>
+                <Text>{profile?.profile.phone}</Text>
+              </HStack>
+            </Stack>
+          </Box>
+
           {introduction && (
             <Stack spacing={3}>
-              <Heading as="h2" size="md">
-                자기소개
-              </Heading>
-              <Card variant="outline">
-                <CardBody>
-                  <VStack align="stretch" spacing={3}>
-                    <Text fontWeight="bold">{introduction.title}</Text>
-                    <Text whiteSpace="pre-wrap">{introduction.content}</Text>
+              <Text whiteSpace="pre-wrap">{introduction.content}</Text>
+            </Stack>
+          )}
+
+          <Divider />
+
+          <Grid templateColumns="2fr 8fr" gap={8}>
+            <GridItem>
+              <Heading as="h2" size="sm" color="gray.600" mb={2}>경력</Heading>
+            </GridItem>
+            <GridItem>
+              {groupedProjects?.map((group, index) => (
+                <Box key={group.company} mb={8} _last={{ mb: 0 }}>
+                  {index > 0 && <Divider mb={8} />}
+                  <Stack spacing={4}>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                      <Heading as="h3" size="md" color="gray.700">
+                        {group.company}
+                      </Heading>
+                      <Text fontSize="sm" color="gray.500">
+                        {new Date(group.startDate).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })} - {' '}
+                        {new Date(group.endDate).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })}
+                      </Text>
+                    </Box>
+                    <Stack spacing={4}>
+                      {group.projects.map((project) => (
+                        <Card key={project.id} variant="outline">
+                          <CardBody>
+                            <VStack align="stretch" spacing={3}>
+                              <HStack>
+                                <Heading as="h4" size="sm" mb={1}>
+                                  {project.title}
+                                </Heading>
+                                <Text fontSize="sm" color="gray.600">
+                                  {new Date(project.startDate).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })} - {' '}
+                                  {new Date(project.endDate).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })}
+                                </Text>
+                              </HStack>
+
+                              {project.summary && (
+                                <Text color="gray.700">{project.summary}</Text>
+                              )}
+
+                              {project.keywords && project.keywords.length > 0 && (
+                                <HStack spacing={2} wrap="wrap">
+                                  {project.keywords.map((keyword) => (
+                                    <Badge
+                                      key={keyword}
+                                      colorScheme="blue"
+                                      variant="subtle"
+                                    >
+                                      {keyword}
+                                    </Badge>
+                                  ))}
+                                </HStack>
+                              )}
+                            </VStack>
+                          </CardBody>
+                        </Card>
+                      ))}
+                    </Stack>
+                  </Stack>
+                </Box>
+              ))}
+            </GridItem>
+          </Grid>
+
+          {profile?.profile.skills && profile?.profile.skills.length > 0 && (
+            <>
+              <Divider />
+              <Grid templateColumns="2fr 8fr" gap={8}>
+                <GridItem>
+                  <Text fontWeight="bold" color="gray.600" mb={2}>기술</Text>
+                </GridItem>
+                <GridItem>
+                  <VStack align="stretch" spacing={2}>
+                    {profile?.profile.skills.map((skill, index) => (
+                      <HStack key={index} justify="space-between">
+                        <Tag colorScheme="gray" >{skill.name} (LV.{skill.level})</Tag>
+                      </HStack>
+                    ))}
                   </VStack>
-                </CardBody>
-              </Card>
-            </Stack>
+                </GridItem>
+              </Grid>
+            </>
+
           )}
 
-          {retrospectives && retrospectives.length > 0 && (
-            <Stack spacing={3}>
-              <Heading as="h2" size="md">
-                프로젝트 경험
-              </Heading>
-              <Stack spacing={4}>
-                {retrospectives.map((retro) => (
-                  <Card key={retro.id} variant="outline">
-                    <CardBody>
-                      <VStack align="stretch" spacing={3}>
-                        <Stack>
-                          <Heading as="h3" size="sm">
-                            {retro.title}
-                          </Heading>
+          {profile?.profile?.education && profile?.profile?.education.length > 0 && (
+            <>
+              <Divider />
+              <Grid templateColumns="2fr 8fr" gap={8}>
+                <GridItem>
+                  <Text fontWeight="bold" color="gray.600" mb={2}>학력</Text>
+                </GridItem>
+                <GridItem>
+                  <VStack align="stretch" spacing={2}>
+                    {profile?.profile?.education.map((education, index) => (
+                      <Box key={index} mt={4} _first={{ mt: 0 }}>
+                        <HStack justify="space-between">
+                          <Text fontWeight="medium">{education.schoolName}</Text>
+                          <Text fontSize="sm" color="gray.600">{education.startDate} - {education.endDate}</Text>
+                        </HStack>
+                        <Text fontSize="sm" color="gray.600">
+                          {education.major}
+                        </Text>
+                      </Box>
+                    ))}
+                  </VStack>
+                </GridItem>
+              </Grid>
+            </>
+          )}
+
+          {profile?.profile?.awards && profile?.profile?.awards.length > 0 && (
+            <>
+              <Divider />
+              <Grid templateColumns="2fr 8fr" gap={8}>
+                <GridItem>
+                  <Text fontWeight="bold" color="gray.600" mb={2}>수상 및 기타</Text>
+                </GridItem>
+                <GridItem>
+                  <VStack align="stretch" spacing={2}>
+                    {profile?.profile?.awards.map((award, index) => (
+                      <Box key={index} mt={4} _first={{ mt: 0 }}>
+                        <HStack justify="space-between">
+                          <Text fontWeight="medium">{award.title}</Text>
                           <Text fontSize="sm" color="gray.600">
-                            {new Date(retro.startDate).toLocaleDateString()} -{' '}
-                            {new Date(retro.endDate).toLocaleDateString()}
+                            {award.date}
                           </Text>
-                        </Stack>
-                        <Text>{retro.summary}</Text>
-                        {retro.keywords && retro.keywords.length > 0 && (
-                          <HStack spacing={2}>
-                            {retro.keywords.map((keyword) => (
-                              <Badge
-                                key={keyword}
-                                colorScheme="primary"
-                                variant="subtle"
-                              >
-                                {keyword}
-                              </Badge>
-                            ))}
-                          </HStack>
-                        )}
-                      </VStack>
-                    </CardBody>
-                  </Card>
-                ))}
-              </Stack>
-            </Stack>
+                        </HStack>
+                        <Text fontSize="sm" color="gray.600">
+                          {award.description}
+                        </Text>
+                      </Box>
+                    ))}
+                  </VStack>
+                </GridItem>
+              </Grid>
+            </>
           )}
 
-          <Stack spacing={3}>
-            <Heading as="h2" size="md">
-              상세 내용
-            </Heading>
-            <Text whiteSpace="pre-wrap">{resume.content}</Text>
-          </Stack>
+          {profile?.profile?.languages && profile?.profile?.languages.length > 0 && (
+            <>
+              <Divider />
+              <Grid templateColumns="2fr 8fr" gap={8}>
+                <GridItem>
+                  <Text fontWeight="bold" color="gray.600" mb={2}>자격증</Text>
+                </GridItem>
+                <GridItem>
+                  <VStack align="stretch" spacing={2}>
+                    {profile?.profile?.languages.map((language, index) => (
+                      <Box key={index}>
+                        <Text fontWeight="medium">{language.name}</Text>
+                        <Text fontSize="sm" color="gray.600">
+                          {language.certifications.map((certification) => certification.date).join(', ')}
+                        </Text>
+                      </Box>
+                    ))}
+                  </VStack>
+                </GridItem>
+              </Grid>
+            </>
+          )}
+
+          {profile?.profile?.links && profile?.profile?.links.length > 0 && (
+            <>
+              <Divider />
+              <Grid templateColumns="2fr 8fr" gap={8}>
+                <GridItem>
+                  <Text fontWeight="bold" color="gray.600" mb={2}>링크</Text>
+                  <VStack align="stretch" spacing={2}>
+                    {profile?.profile?.links.map((link, index) => (
+                      <HStack key={index}>
+                        <Badge colorScheme="blue">{link.type}</Badge>
+                        <Link href={link.url} color="blue.500">
+                          {link.description || link.url}
+                        </Link>
+                      </HStack>
+                    ))}
+                  </VStack>
+                </GridItem>
+              </Grid>
+            </>
+          )}
         </Stack>
       </CardBody>
     </Card>
