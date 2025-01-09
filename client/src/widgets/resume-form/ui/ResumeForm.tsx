@@ -16,12 +16,12 @@ import {
   Checkbox,
 } from '@chakra-ui/react';
 import { getIntroductions } from '@/entities/introduction/api/getIntroductions';
-import { getRetrospectives } from '@/entities/retrospective/api/getRetrospectives';
 import { createResume } from '@/entities/resume/api/createResume';
 import { updateResume } from '@/entities/resume/api/updateResume';
 import { CreateResumeRequest, Resume } from '@/entities/resume/model/types';
-import { RetrospectiveSelectModal } from '@/features/resume/ui/RetrospectiveSelectModal';
-import { SelectedRetrospectiveList } from '@/features/resume/ui/SelectedRetrospectiveList';
+import { ProjectSelectModal } from '@/features/resume/ui/ProjectsSelectModal';
+import { SelectedProjectList } from '@/features/resume/ui/SelectedProjectList';
+import { getProjects } from '@/shared/api/project';
 
 interface ResumeFormProps {
   mode?: 'create' | 'edit';
@@ -44,9 +44,9 @@ export default function ResumeForm({
     queryFn: () => getIntroductions(),
   });
 
-  const { data: retrospectivesData } = useQuery({
-    queryKey: ['retrospectives'],
-    queryFn: () => getRetrospectives(),
+  const { data: projectsData } = useQuery({
+    queryKey: ['projects'],
+    queryFn: () => getProjects(),
   });
 
   const {
@@ -65,9 +65,9 @@ export default function ResumeForm({
     },
   });
 
-  const selectedProjects = watch('projects');
-  const selectedRetrospectives = retrospectivesData?.retrospectives.filter(
-    (retro) => selectedProjects?.includes(retro.id)
+  const projects = watch('projects');
+  const selectedProjects = projectsData?.projects.filter(
+    (project) => projects?.includes(project.id)
   ) || [];
 
   const createMutation = useMutation({
@@ -118,20 +118,20 @@ export default function ResumeForm({
     }
   };
 
-  const handleRemoveRetrospective = (id: string) => {
+  const handleRemoveProject = (id: string) => {
     setValue(
       'projects',
-      selectedProjects?.filter((projectId) => projectId !== id) || []
+      selectedProjects?.filter((project) => project.id !== id).map((project) => project.id) || []
     );
   };
 
-  const handleConfirmRetrospectives = (selectedIds: string[]) => {
+  const handleConfirmProjects = (selectedIds: string[]) => {
     setValue('projects', selectedIds);
   };
 
   // 요약 내용이 있는 회고만 필터링
-  const availableRetrospectives = retrospectivesData?.retrospectives.filter(
-    (retro) => retro.summary
+  const availableProjects = projectsData?.projects.filter(
+    (project) => project.summary
   ) || [];
 
   return (
@@ -162,9 +162,9 @@ export default function ResumeForm({
 
         <FormControl>
           <FormLabel>회고</FormLabel>
-          <SelectedRetrospectiveList
-            retrospectives={selectedRetrospectives}
-            onRemove={handleRemoveRetrospective}
+          <SelectedProjectList
+            projects={selectedProjects}
+            onRemove={handleRemoveProject}
             onAdd={() => setIsModalOpen(true)}
           />
         </FormControl>
@@ -197,12 +197,12 @@ export default function ResumeForm({
         </Button>
       </Stack>
 
-      <RetrospectiveSelectModal
+      <ProjectSelectModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        retrospectives={availableRetrospectives}
-        selectedRetrospectiveIds={selectedProjects || []}
-        onConfirm={handleConfirmRetrospectives}
+        projects={availableProjects}
+        selectedProjectIds={selectedProjects.map((project) => project.id) || []}
+        onConfirm={handleConfirmProjects}
       />
     </Box>
   );

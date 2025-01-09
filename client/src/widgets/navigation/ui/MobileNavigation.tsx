@@ -16,7 +16,7 @@ const NAV_ITEMS: NavItem[] = [
     icon: <FiInfo size={20} />,
   },
   {
-    href: '/retrospectives',
+    href: '/projects',
     label: '회고',
     icon: <FiBook size={20} />,
   },

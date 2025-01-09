@@ -1,17 +1,19 @@
 export interface Project {
   id: string;
-  title: string; // max 50 characters
-  companyName: string;
-  startDate: string; // YYYY-MM
-  endDate: string; // YYYY-MM
-  keywords: string[];
-  situation: string;
-  task: string;
-  summary: string;
-  action: string;
-  result: string;
-  isPublic: boolean;
+  title: string;
   workExperienceId: string;
+  companyName: string;
+  startDate: string;
+  endDate: string;
+  situation?: string;
+  task?: string;
+  action?: string;
+  result?: string;
+  isPublic: boolean;
+  keywords?: string[];
+  summary?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const validateProjectTitle = (title: string): boolean => {

@@ -15,7 +15,7 @@ import { logout } from '@/shared/api/auth';
 
 const NAV_ITEMS = [
   { href: '/profile', label: '기본정보' },
-  { href: '/retrospectives', label: '회고' },
+  { href: '/projects', label: '회고' },
   { href: '/resumes', label: '이력서' },
   { href: '/introductions', label: '자기소개' },
   { href: '/companies', label: '관심기업' },

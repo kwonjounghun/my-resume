@@ -6,7 +6,7 @@ import { Project } from '../../types/project';
 import { format } from 'date-fns';
 
 interface ProjectCardProps {
-  project: Project;
+  project: Partial<Project>;
   layout?: 'horizontal' | 'vertical';
   onClick?: () => void;
   maxVisibleTags?: number;
@@ -78,9 +78,9 @@ export const ProjectCard = ({
           <Title>{title}</Title>
         </ContentContainer>
         <ProjectInfo>
-          <Period>{formatDate(startDate)} - {formatDate(endDate)}</Period>
+          <Period>{formatDate(startDate || '')} - {formatDate(endDate || '')}</Period>
           <HStack spacing={2} wrap="wrap" justifyContent="flex-end">
-            {renderTags(keywords)}
+            {renderTags(keywords || [])}
           </HStack>
         </ProjectInfo>
       </HorizontalContainer>
@@ -92,9 +92,9 @@ export const ProjectCard = ({
       <CardContent>
         <CompanyName>{companyName}</CompanyName>
         <Title>{title}</Title>
-        <Period>{formatDate(startDate)} - {formatDate(endDate)}</Period>
+        <Period>{formatDate(startDate || '')} - {formatDate(endDate || '')}</Period>
         <HStack spacing={2} wrap="wrap">
-          {renderTags(keywords)}
+          {renderTags(keywords || [])}
         </HStack>
       </CardContent>
     </VerticalContainer>
