@@ -68,4 +68,18 @@ export class ProjectRepositoryImpl implements ProjectRepository {
 
     return new Project({ ...project, id: project._id.toString() });
   }
+
+  async update(id: string, project: Partial<Project>, userId: string): Promise<Project> {
+    const updated = await this.projectModel.findOneAndUpdate(
+      { _id: id, userId },
+      { ...project, updatedAt: new Date() },
+      { new: true },
+    ).lean();
+
+    if (!updated) {
+      throw new NotFoundException('프로젝트를 찾을 수 없습니다.');
+    }
+
+    return new Project({ ...updated, id: updated._id.toString() });
+  }
 } 

@@ -11,7 +11,7 @@ import {
   Button,
   useToast,
 } from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { projectApi } from '@/shared/api/project';
 import { workExperienceApi, WorkExperience } from '@/shared/api/work-experience';
@@ -23,6 +23,7 @@ interface ProjectDetailPageProps {
 export const ProjectDetailPage = ({ projectId }: ProjectDetailPageProps) => {
   const router = useRouter();
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   const { data: project, isLoading: isLoadingProject } = useQuery({
     queryKey: ['project', projectId],
@@ -35,9 +36,34 @@ export const ProjectDetailPage = ({ projectId }: ProjectDetailPageProps) => {
     enabled: !!project,
   });
 
+  const { mutate: summarize, isPending: isSummarizing } = useMutation({
+    mutationFn: () => projectApi.summarize(projectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['project', projectId] });
+      toast({
+        title: '성공',
+        description: '프로젝트가 성공적으로 요약되었습니다.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: '오류',
+        description: '프로젝트 요약에 실패했습니다. 다시 시도해주세요.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
   const workExperience = workExperiences?.workExperiences.find(
     (we: WorkExperience) => we.id === project?.workExperienceId
   );
+
+  const canSummarize = project?.situation && project?.task && project?.action && project?.result && !project?.summary;
 
   if (isLoadingProject || isLoadingWorkExperience) {
     return (
@@ -74,6 +100,13 @@ export const ProjectDetailPage = ({ projectId }: ProjectDetailPageProps) => {
         </Box>
 
         <Divider />
+
+        {project.summary && (
+          <Box>
+            <Heading size="md" mb={3}>요약</Heading>
+            <Text whiteSpace="pre-wrap" mb={4}>{project.summary}</Text>
+          </Box>
+        )}
 
         {project.situation && (
           <Box>
@@ -120,6 +153,15 @@ export const ProjectDetailPage = ({ projectId }: ProjectDetailPageProps) => {
           <Button variant="outline" onClick={() => router.push('/projects')}>
             목록으로
           </Button>
+          {canSummarize && (
+            <Button
+              colorScheme="green"
+              onClick={() => summarize()}
+              isLoading={isSummarizing}
+            >
+              요약하기
+            </Button>
+          )}
           <Button colorScheme="blue" onClick={() => router.push(`/projects/${projectId}/edit`)}>
             수정
           </Button>

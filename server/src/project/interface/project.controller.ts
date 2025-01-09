@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/co
 import { GetProjectsUseCase } from '../application/get-projects.usecase';
 import { GetProjectUseCase } from '../application/get-project.usecase';
 import { CreateProjectUseCase } from '../application/create-project.usecase';
+import { SummarizeProjectUseCase } from '../application/summarize-project.usecase';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
@@ -15,6 +16,7 @@ export class ProjectController {
     private getProjectsUseCase: GetProjectsUseCase,
     private getProjectUseCase: GetProjectUseCase,
     private createProjectUseCase: CreateProjectUseCase,
+    private summarizeProjectUseCase: SummarizeProjectUseCase,
   ) { }
 
   @Post()
@@ -72,5 +74,15 @@ export class ProjectController {
     @CurrentUser() userId: string,
   ) {
     return this.getProjectUseCase.execute(id, userId);
+  }
+
+  @Post(':id/summarize')
+  @ApiOperation({ summary: '프로젝트 요약 생성' })
+  @ApiResponse({ status: 200, description: '프로젝트 요약이 성공적으로 생성되었습니다.' })
+  async summarizeProject(
+    @Param('id') id: string,
+    @CurrentUser() userId: string,
+  ) {
+    return this.summarizeProjectUseCase.execute(id, userId);
   }
 } 
