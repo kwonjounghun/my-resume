@@ -54,7 +54,7 @@ export class ProjectRepositoryImpl implements ProjectRepository {
     ]);
 
     return {
-      projects: projects.map(project => new Project(project)),
+      projects: projects.map(project => new Project({ ...project, id: project._id.toString() })),
       total,
     };
   }

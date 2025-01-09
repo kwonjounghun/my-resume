@@ -43,4 +43,7 @@ export const projectApi = {
   create: (data: CreateProjectDto) => {
     return client.post<Project>('/projects', data);
   },
+  getById: (id: string) => {
+    return client.get<Project>(`/projects/${id}`);
+  },
 }; 

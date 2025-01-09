@@ -5,7 +5,10 @@ export interface Project {
   startDate: string; // YYYY-MM
   endDate: string; // YYYY-MM
   keywords: string[];
-  summary: string;
+  situation: string;
+  task: string;
+  action: string;
+  result: string;
   isPublic: boolean;
   workExperienceId: string;
 }
