@@ -1,14 +1,34 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { GetProjectsUseCase } from '../application/get-projects.usecase';
+import { CreateProjectUseCase } from '../application/create-project.usecase';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
-import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { CreateProjectDto } from './dto/create-project.dto';
 
 @ApiTags('projects')
 @Controller('projects')
 @UseGuards(JwtAuthGuard)
 export class ProjectController {
-  constructor(private getProjectsUseCase: GetProjectsUseCase) { }
+  constructor(
+    private getProjectsUseCase: GetProjectsUseCase,
+    private createProjectUseCase: CreateProjectUseCase,
+  ) { }
+
+  @Post()
+  @ApiOperation({ summary: '프로젝트 생성' })
+  @ApiResponse({ status: 201, description: '프로젝트가 성공적으로 생성되었습니다.' })
+  async createProject(
+    @Body() createProjectDto: CreateProjectDto,
+    @CurrentUser() userId: string,
+  ) {
+    const project = await this.createProjectUseCase.execute({
+      ...createProjectDto,
+      userId,
+    });
+
+    return project;
+  }
 
   @Get()
   @ApiOperation({ summary: '프로젝트 목록 조회' })
