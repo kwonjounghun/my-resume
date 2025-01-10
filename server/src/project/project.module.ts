@@ -32,5 +32,6 @@ import { OpenAIModule } from '../common/services/openai.module';
     SummarizeProjectUseCase,
   ],
   controllers: [ProjectController],
+  exports: [PROJECT_REPOSITORY],
 })
-export class ProjectModule { } 
+export class ProjectModule { }
