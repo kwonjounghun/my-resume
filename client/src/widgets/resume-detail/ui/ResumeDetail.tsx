@@ -93,8 +93,6 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
     try {
       const response: Response = await client.get(`/resumes/${id}/pdf`);
 
-      if (!response.ok) throw new Error('PDF 생성에 실패했습니다.');
-
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
