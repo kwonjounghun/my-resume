@@ -23,6 +23,7 @@ import { getIntroduction } from '@/entities/introduction/api/getIntroduction';
 import { projectApi } from '@/shared/api/project';
 import { useProfile } from '@/entities/profile/model/hooks/useProfile';
 import { Project } from '@/shared/api/project';
+import { client } from '@/shared/api/client';
 
 interface ResumeDetailProps {
   id: string;
@@ -90,11 +91,7 @@ export default function ResumeDetail({ id }: ResumeDetailProps) {
 
   const handleDownloadPdf = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/resumes/${id}/pdf`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-        },
-      });
+      const response: Response = await client.get(`/api/resumes/${id}/pdf`);
 
       if (!response.ok) throw new Error('PDF 생성에 실패했습니다.');
 
