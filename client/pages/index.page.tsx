@@ -76,7 +76,7 @@ export default function Home() {
               <Text fontSize="xl" color="gray.600" lineHeight="tall">
                 STAR 기법으로 프로젝트 회고를 작성하고,
                 <br />
-                맞춤형 이력서를 손쉽게 만들어보세요.
+                맞춤형 이력서를 손쉽게 만들어보세용.
               </Text>
             </Stack>
             <Stack direction="row" spacing={4}>
